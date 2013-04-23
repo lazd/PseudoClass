@@ -1,4 +1,4 @@
-# Class
+# Class  [![Build status][travis-image]][travis] [![Code coverage status][coveralls-image]][coveralls]
 > A JavaScript inheritance framework for Node.js and the browser
 
 Class is a robust, lightweight a wrapper that gives you some sweet syntactic sugar for native prototypal JavaScript inheritance.
@@ -126,3 +126,10 @@ child.destruct();
 ## License
 
 Class is licensed under the permissive BSD license.
+
+
+[coveralls]: https://coveralls.io/r/lazd/Class
+[coveralls-image]: https://coveralls.io/repos/lazd/Class/badge.png?branch=master
+
+[travis]: http://travis-ci.org/lazd/Class
+[travis-image]: https://secure.travis-ci.org/lazd/Class.png?branch=master
