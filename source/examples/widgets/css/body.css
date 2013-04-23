@@ -1,0 +1,10 @@
+html {
+	font-size: 16px;
+	font-family: 'Lucida Sans Unicode', 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+body {
+	background: rgb(240, 240, 240);
+	
+	margin: 1.5rem;
+}

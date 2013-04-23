@@ -1,0 +1,32 @@
+{
+  "name": "Class",
+  "version": "0.1.0",
+  "homepage": "https://lazd.github.com/Class",
+  "author": "Larry Davis",
+  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lazd/Class.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lazd/Class/issues"
+  },
+  "devDependencies": {
+    "grunt-cli": "~0.1.7",
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-mocha-cov": "0.0.3",
+    "chai": "~1.5.0"
+  },
+  "scripts": {
+    "blanket": {
+      "pattern": [
+        "source"
+      ]
+    },
+    "test": "grunt test"
+  }
+}

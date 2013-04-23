@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- Some basic CSS -->
+<link rel="stylesheet" href="css/body.css">
+<link rel="stylesheet" href="css/alert.css">
+
+<!-- Include Class -->
+<script src="../../Class.js"></script>
+
+<!-- Include order matters: you should include classes that are required by others classes first -->
+<script src="js/Base.js"></script>
+<script src="js/Events.js"></script>
+<script src="js/Widget.js"></script>
+<script src="js/Alert.js"></script>
+
+<!-- This example uses jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+<title>Class Example: Widgets</title>
+<h1>Class Example: Widgets</h1>
+<p>
+	In this example, we'll use 
+	<a href="https://github.com/lazd/Class/blob/master/source/examples/widgets/js/Widget.js#L13">a mixin</a>,
+	3 levels of inheritance (
+	<a href="https://github.com/lazd/Class/blob/master/source/examples/widgets/js/Base.js">1</a>,
+	<a href="https://github.com/lazd/Class/blob/master/source/examples/widgets/js/Widget.js#L10">2</a>,
+	<a href="https://github.com/lazd/Class/blob/master/source/examples/widgets/js/Alert.js#L3">3</a>
+	),
+	and some
+	<a href="https://github.com/lazd/Class/blob/master/source/examples/widgets/js/Widget.js#L37">method override tricks</a>
+	coupled with
+	<a href="https://github.com/lazd/Class/blob/master/source/examples/widgets/js/Alert.js#L33"><code>this._super()</code></a>.
+</p>
+
+<p>Open <a href="https://developers.google.com/chrome-developer-tools/docs/console" target="_blank">your browser's console</a>, then click the button below.</p>
+
+<a class="button breakStuff">Show Alert</a>
+
+<div id="alert" class="alert" style="display: none;">
+	<a href="#" class="alert-close" data-close></a>
+	<h1 class="alert-heading"></h1>
+	<div class="alert-message"></div>
+	<div class="alert-buttons">
+		<a href="#" class="button" data-close>Ok</a>
+	</div>
+</div>
+
+<script type="text/javascript">
+	// Create an instance of our Alert widget
+	// The new keyword is optional here.
+	var alert = new Alert({
+		el: '#alert',
+		heading: 'Error',
+		message: 'An unknown error has occurred.<br>Please give your computer a firm smack and try again.'
+	});
+
+	// Use a method from a mixin
+	alert.on('shown', function() {
+		clearTimeout(this.hideTimeout);
+		this.hideTimeout = setTimeout(function() {
+			// Use a method
+			alert.hide();
+		}, 3000);
+	});
+	
+	$('.breakStuff').on('click', function() {
+		// Use a method from the Alert class
+		alert.show();
+	});
+</script>
