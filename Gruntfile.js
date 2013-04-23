@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadTasks('tasks/grunt-mocha-cov/tasks/');
+	grunt.loadNpmTasks('grunt-mocha-cov');
 	
 	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage']);
 	grunt.registerTask('test', [ 'jshint', 'mochacov:test']);
