@@ -1,17 +1,24 @@
 # Class  [![Build status][travis-image]][travis] [![Code coverage status][coveralls-image]][coveralls]
-> A JavaScript inheritance framework for Node.js and the browser
+> A JavaScript OOP framework for Node.js and the browser
 
-Class is a robust, lightweight a wrapper that gives you some sweet syntactic sugar for native prototypal JavaScript inheritance.
+#### Sweet syntactic sugar for prototypal inheritance.
+Class adds `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
+
+#### Not afraid to mix it up.
+Mixins can be added when a class is declared, and class's `mixin()` method let's you mixin on certain instances.
+
+#### Crushes boilerplate with a classy touch.
+Stay classy and boilerplate free with string-based `toString` declarations and automatic chaining of `construct()` and `destruct()`.
 
 
 ## Dependencies
 
-Class is completely standalone with no dependencies. All you need to stay classy is `Class.js`.
+Class is completely standalone with no dependencies. All you need to stay classy is [`Class.js`][Class.min.js].
 
 
 ## Compatibility
 
-Class is compatible with the latest modern browsers and the oldest versions of Node.js and even IE 5 (with the use of `Class.polyfills.js`).
+Class is compatible with the latest modern browsers and the oldest versions of Node.js and even IE 5 (with the use of [`Class.polyfills.js`][Class.polyfills.min.js]).
 
 
 ## Usage
@@ -29,6 +36,9 @@ var Parent = Class({
 	},
 	destruct: function() {
 		console.log('Parent: Destructing');
+	},
+	doStuff: function() {
+		console.log('Parent: Doing stuff');
 	}
 });
 ```
@@ -39,14 +49,14 @@ var Parent = Class({
 ```javascript
 var stuffDoer = {
 	doStuff: function() {
-		console.log('Mixin: Doing stuff');
 		this._super();
+		console.log('Mixin: Doing stuff');
 	}
 };
 ```
 
 
-### Inherit from Parent and mix in a mixins
+### Inherit from Parent and mix in a mixin
 
 ```javascript
 var Child = Parent.extend({
@@ -59,6 +69,7 @@ var Child = Parent.extend({
 		console.log(this+': Destructing');
 	},
 	doStuff: function() {
+		this._super();
 		console.log(this+': Doing stuff');
 	}
 });
@@ -81,8 +92,9 @@ var child = new Child(); // The new keyword is optional
 ```javascript
 child.doStuff();
 /* Output:
-	Mixin: Doing stuff
+	Parent: Doing stuff
 	Child: Doing stuff
+	Mixin: Doing stuff
 */
 ```
 
@@ -127,6 +139,9 @@ child.destruct();
 
 Class is licensed under the permissive BSD license.
 
+
+[Class.min.js]: http://lazd.github.io/Class/build/Class.min.js
+[Class.polyfills.min.js]: http://lazd.github.io/Class/build/Class.polyfills.min.js
 
 [coveralls]: https://coveralls.io/r/lazd/Class
 [coveralls-image]: https://coveralls.io/repos/lazd/Class/badge.png?branch=master
