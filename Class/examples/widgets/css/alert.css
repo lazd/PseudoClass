@@ -1,0 +1,132 @@
+.alert {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	z-index: 2;
+	
+	width: 30rem;
+	height: 10rem;
+	
+	border: 0.25rem solid rgba(0,0,0,0.375);
+	border-radius: 0.25rem;
+	
+	box-shadow: 0 0 2.5rem rgba(0, 0, 0, 0.35);
+}
+
+.alert:before {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 0;
+	
+	display: block;
+	content: " ";
+	
+	background: rgba(0,0,0,0.375);
+}
+
+.alert-heading {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	
+	height: 2.5rem;
+	
+	margin: 0;
+	padding: 0 0.625rem;
+	
+	border-bottom: 0.0625rem solid rgb(160, 160, 160);
+	
+	font-size: 1.5rem;
+	line-height: 2.5rem;
+	text-shadow: 0 0.0625rem 0 rgba(255, 255, 255, 1);
+	
+	background: rgb(210, 210, 210);
+}
+
+.alert-message {
+	position: absolute;
+	top: 2.5rem;
+	left: 0;
+	right: 0;
+	bottom: 2.5rem;
+	
+	padding: 1rem;
+	
+	background: rgb(230, 230, 230);
+	
+	line-height: 1.3;
+	text-shadow: 0 0.0625rem 0 rgba(255, 255, 255, 0.75);
+}
+
+.alert-buttons {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	
+	height: 2.875rem;
+	
+	background: rgb(230, 230, 230);
+	
+	text-align: right;
+}
+
+.button {
+	display: inline-block;
+	min-width: 3rem;
+	margin: 0.5rem;
+	padding: 0 0.5rem;
+
+	cursor: pointer;
+
+	height: 1.75rem;
+
+	border: 0.0625rem solid rgba(60,85,32,0.25);
+	box-shadow: inset -0.0625rem -0.0625rem 0 rgba(0, 0, 0, 0.1),
+				inset 0.0625rem 0.0625rem 0 rgba(255, 255, 255, 0.35);
+
+	background: rgb(125,200,64);
+	background: linear-gradient(to bottom, rgb(125,200,64) 0%,rgb(112,167,67) 100%);
+
+	color: rgb(250, 250, 250);
+	text-decoration: none;
+	text-align: center;
+	line-height: 1.825rem;
+	font-weight: bold;
+	text-shadow: 0 -0.0625rem 0 rgba(0,0,0,0.5);
+	
+	border-radius: 0.125rem;
+}
+
+.alert-close {
+	display: block;
+	
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	
+	width: 2.5rem;
+	height: 2.5rem;
+	text-decoration: none;
+}
+
+.alert-close:before {
+	display: block;
+
+	content: "\00d7";
+
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 2rem;
+	text-align: center;
+	line-height: 2.3625rem;
+	text-shadow: 0 0.0625rem 0.0625rem rgba(255, 255, 255, 1);
+}
+
+.alert-close:hover:before {
+	color: rgb(0, 0, 0);
+}

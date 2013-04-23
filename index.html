@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<title>Class - JavaScript OOP Framework</title>
+	<link rel="stylesheet" href="//lazd.github.io/F/css/styles.css">
+	<link rel="stylesheet" href="//lazd.github.io/F/css/pygment_trac.css">
+	<link rel="stylesheet" href="//lazd.github.io/F/css/font-awesome.css">
+	<link rel="stylesheet" href="css/class.css">
+	<link href='http://fonts.googleapis.com/css?family=Dancing+Script:400,700' rel='stylesheet' type='text/css'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="//lazd.github.io/F/js/respond.js"></script>
+	
+	<link href="//lazd.github.io/F/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
+	<link href="//lazd.github.io/F/google-code-prettify/sunburst.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="//lazd.github.io/F/google-code-prettify/prettify.js"></script>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<!--[if lt IE 8]>
+	<link rel="stylesheet" href="css/ie.css">
+	<![endif]-->
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+</head>
+<body onload="prettyPrint()">
+	<div id="header">
+		<nav>
+			<li class="fork"><a href="https://github.com/lazd/Class"><i class="icon-github"></i> GitHub</a></li>
+			<li class="downloads"><a href="http://lazd.github.io/Class/build/Class.min.js"><i class="icon-download-alt"></i> <span class="logo">Class.js</span></a></li>
+
+			<li class="spacer"></li>
+			
+			<div class="logo">Class<span class="notBold dim">.js</span></div>
+			<!--
+			<li class="downloads disabled"><a href="build/jsdoc/index.html"><i class="icon-info-sign"></i> API Docs</a></li>
+			<li class="downloads"><a href="build/manual/index.html"><i class="icon-book"></i> Manual</a></li>
+			-->
+		</nav>
+	</div><!-- end header -->
+
+	<div class="wrapper">
+
+		<section>
+			<div id="title">
+				<h1 class="logo">Class<span class="notBold dim">.js</span></h1>
+				<p>An object oriented programming framework for Node.js and the browser</p>
+				<hr>
+			</div>
+
+			<h2>Sweet syntactic sugar for prototypal inheritance.</h2>
+			<p><span class="logo">Class</span> adds <span class="code"><span class="typ">construct</span>()</span>, <span class="code"><span class="typ">destruct</span>()</span>, <span class="code"><span class="typ">_super</span>()</span>, and an <span class="code"><span class="typ">init</span>()</span> method that runs after construction is complete.</p>
+			
+			<h2>Not afraid to mix it up.</h2>
+			<p>Mixins can be added when a class is declared, and class's <span class="code"><span class="typ">mixin</span>()</span> method let's you mixin on certain instances.</p>
+			
+			<h2>Crushes boilerplate with a classy touch.</h2>
+			<p>Stay classy and boilerplate free with string-based <span class="code"><span class="typ">toString</span></span> declarations and automatic chaining of <span class="code"><span class="typ">construct</span>()</span> and <span class="code"><span class="typ">destruct</span>()</span>.</p>
+			
+		</section>
+		
+		<section class="buttonDrawer center">
+			<!-- <a class="button right" href="Class/jsdoc/index.html"><i class="icon-info-sign"></i> API Docs</a> -->
+			<a class="button" href="build/examples/widgets/index.html" target="_blank">See <span class="logo">Class.js</span> in action</a>
+			<a class="button" href="http://lazd.github.io/Class/build/Class.min.js"><i class="icon-download-alt"></i> Download <span class="logo">Class.js</span></a>
+		</section>
+		
+		<section class="clear">
+			<h2>Getting started is easy.</h2>
+			
+			<section>
+
+<h3>1. Define a class:</h3>
+<p>It's a class in the classical sense on top with JavaScript prototypal inheritance underneath.</p>
+<code class="prettyprint">var Parent = Class({
+	toString: 'Parent',
+	construct: function() {
+		console.log('Parent: Constructing');
+	},
+	destruct: function() {
+		console.log('Parent: Destructing');
+	},
+	doStuff: function() {
+		console.log('Parent: Doing stuff');
+	}
+});</code>
+
+<h3>2. Define a mixin</h3>
+<p>Mixins are a set methods you can plug into any class.</p>
+<code class="prettyprint">var stuffDoer = {
+	doStuff: function() {
+		this._super();
+		console.log('Mixin: Doing stuff');
+	}
+};</code>
+
+<h3>3. Inherit from Parent and mix in a mixin</h3>
+<p>Mixins can be added to declaration time with the <span class="code prettyprint">mixins: [properties,...]</span> option.</p>
+<code class="prettyprint">var Child = Parent.extend({
+	toString: 'Child',
+	mixins: [stuffDoer],
+	construct: function() {
+		console.log(this+': Constructing');
+	},
+	destruct: function() {
+		console.log(this+': Destructing');
+	},
+	doStuff: function() {
+		this._super();
+		console.log(this+': Doing stuff');
+	}
+});</code>
+	
+<h3>4. Create an instance</h3>
+<p>Fire it up! <span class="code"><span class="typ">construct</span>()</span> is automatically chained, and the Parent's method is called first.</p>
+<code class="prettyprint">var child = new Child(); // The new keyword is optional
+/* Output:
+	Parent: Constructing
+	Child: Constructing
+*/</code>
+
+<h3>5. Call a method</h3>
+<p>Watch <span class="logo">Class</span> call overridden methods for you when you use <span class="code"><span class="typ">_super</span>()</span>.</p>
+<code class="prettyprint">child.doStuff();
+/* Output:
+	Parent: Doing stuff
+	Child: Doing stuff
+	Mixin: Doing stuff
+*/</code>
+
+<h3>5. Check yo' self</h3>
+<p>Mixins can be added after the class is instantiated.</p>
+<code class="prettyprint">child.mixin({
+	doMoreStuff: function() {
+		console.log(this+': Doing more stuff')
+	}
+});
+
+child.doMoreStuff();
+/* Output:
+	Child: Doing more stuff
+*/</code>
+
+<h3>5. Wreck yo' self</h3>
+<p><span class="code"><span class="typ">destruct</span>()</span> is automatically chained, and the Childs's method is called first.</p>
+<code class="prettyprint">child.mixin({
+	doMoreStuff: function() {
+		console.log(this+': Doing more stuff')
+	}
+});
+
+child.doMoreStuff();
+/* Output:
+	Child: Doing more stuff
+*/</code>
+			</section>
+		</section>
+	</div>
+	<!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+
+	<span class="credits">Maintained by <a href="https://github.com/lazd">lazd</a></span>
+	<!-- <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span> -->
+</body>
+</html>

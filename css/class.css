@@ -1,0 +1,45 @@
+.logo {
+	font-family: 'Dancing Script', cursive, serif !important;
+	font-weight: 700 !important;
+	font-size: 122%;
+	letter-spacing: -1px;
+}
+
+#header nav li a .logo,
+.button .logo {
+	font-size: 150% !important;
+	line-height: 12px !important;
+}
+
+.notBold {
+	font-weight: normal !important;
+}
+
+.dim {
+	opacity: 0.75;
+}
+
+.center {
+	text-align: center;
+}
+
+.buttonDrawer.center .button {
+	margin: 16px 6px;
+	height: 12px;
+	padding: 18px 12px;
+
+	font-size: 24px;
+	font-weight: normal;
+	letter-spacing: -1px;
+}
+
+.buttonDrawer.center .button i {
+	vertical-align: top;
+	font-size: 115%;
+}
+
+.disabled {
+	opacity: 0.5;
+	cursor: none;
+	pointer-events: none;
+}
