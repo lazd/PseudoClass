@@ -32,8 +32,7 @@ module.exports = function(grunt) {
 			coverage: {
 				options: {
 					coveralls: {
-						serviceName: 'travis-pro',
-						repoToken: 'hiMXdBTvdBXYMobM0nK8HzV2TpQ5Ys8iZ'
+						serviceName: 'travis-ci'
 					}
 				}
 			},
@@ -53,7 +52,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-mocha-cov');
+	grunt.loadTasks('tasks/grunt-mocha-cov/tasks/');
 	
 	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage']);
 	grunt.registerTask('test', [ 'jshint', 'mochacov:test']);
