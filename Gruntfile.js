@@ -1,10 +1,19 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		concat: {
-			dist: {
-				src: ['source/Class.js'],
-				dest: 'build/<%= pkg.name %>.js'
+		copy: {
+			js: {
+				expand: true,
+				flatten: true,
+				isFile: true,
+				src: ['source/*.js'],
+				dest: 'build/'
+			},
+			examples: {
+				expand: true,
+				cwd: 'source/examples/',
+				src: ['**'],
+				dest: 'build/examples/'
 			}
 		},
 		uglify: {
@@ -15,7 +24,8 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'build/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+					'build/<%= pkg.name %>.min.js': ['<%= copy.js.dest %>/<%= pkg.name %>.js'],
+					'build/<%= pkg.name %>.polyfills.min.js': ['<%= copy.js.dest %>/<%= pkg.name %>.polyfills.js']
 				}
 			}
 		},
@@ -51,10 +61,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-mocha-cov');
 	
 	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage']);
 	grunt.registerTask('test', [ 'jshint', 'mochacov:test']);
-	grunt.registerTask('default', [ 'jshint','test', 'concat', 'uglify']);
+	grunt.registerTask('default', [ 'jshint','test', 'copy', 'uglify']);
 };
