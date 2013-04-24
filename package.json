@@ -14,7 +14,7 @@
   "devDependencies": {
     "grunt-cli": "~0.1.7",
     "grunt": "~0.4.1",
-    "grunt-benchmark": "git://github.com/lazd/grunt-benchmark.git#4113d955fba63a081a6fae230fc77d084b1e5ba4",
+    "grunt-benchmark": "git://github.com/lazd/grunt-benchmark.git",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-watch": "~0.3.1",
     "grunt-contrib-uglify": "~0.2.0",
