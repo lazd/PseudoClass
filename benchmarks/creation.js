@@ -1,37 +1,37 @@
 var Class = require('../source/Class');
 var ResigClass = require('./libs/Class.Resig');
 
+var ClassA = Class.extend({
+	construct: function() {
+		return 'test';
+	}
+});
+
+var ResigA = ResigClass.extend({
+	init: function() {
+		return 'test';
+	}
+});
+
+var NativeA = function() {
+	this.construct();
+};
+
+NativeA.prototype.construct = function() {
+	return 'test';
+};
+
 module.exports = {
-	name: 'Instance Creation',
+	name: 'Instance creation',
 	tests: {
 		'Class.js': function() {
-			var A = Class.extend({
-				construct: function() {
-					return 'test';
-				}
-			});
-	
-			var a = new A();
+			var a = new ClassA();
 		},
 		'Resig': function() {
-			var A = ResigClass.extend({
-				init: function() {
-					return 'test';
-				}
-			});
-	
-			var a = new A();
+			var a = new ResigA();
 		},
 		'Native': function() {
-			var A = function() {
-				this.construct();
-			};
-		
-			A.prototype.construct = function() {
-				return 'test';
-			};
-		
-			var a = new A();
+			var a = new NativeA();
 		}
 	}
 };
