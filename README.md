@@ -5,10 +5,10 @@
 Class adds `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
 
 #### Not afraid to mix it up.
-Mixins can be added when a class is declared, and class's `mixin()` method let's you mixin on certain instances.
+Mixins can be added when a class is declared or after instantiation with the `mixin()` method.
 
 #### Crushes boilerplate with a classy touch.
-Stay classy and boilerplate free with string-based `toString` declarations and automatic chaining of `construct()` and `destruct()`.
+Stay classy and boilerplate-free with string-based `toString` declarations and automatic chaining of `construct()` and `destruct()`.
 
 
 ## Dependencies
@@ -56,7 +56,7 @@ var stuffDoer = {
 ```
 
 
-### Inherit from Parent and mix in a mixin
+### Inherit from Parent and add a mixin
 
 ```javascript
 var Child = Parent.extend({
