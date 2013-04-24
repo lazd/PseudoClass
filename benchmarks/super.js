@@ -12,6 +12,16 @@ var ClassB = ClassA.extend({
 		return this._super();
 	}
 });
+var ClassC = ClassB.extend({
+	method: function() {
+		return this._super();
+	}
+});
+var ClassN = ClassC.extend({
+	method: function() {
+		return this._super();
+	}
+});
 
 // Resig
 var ResigA = ResigClass.extend({
@@ -20,6 +30,16 @@ var ResigA = ResigClass.extend({
 	}
 });
 var ResigB = ResigA.extend({
+	method: function() {
+		return this._super();
+	}
+});
+var ResigC = ResigB.extend({
+	method: function() {
+		return this._super();
+	}
+});
+var ResigN = ResigC.extend({
 	method: function() {
 		return this._super();
 	}
@@ -37,6 +57,18 @@ NativeB.prototype.method = function() {
 	return NativeA.prototype.method.call(this);
 };
 
+var NativeC = function() {};
+NativeC.prototype = new NativeB();
+NativeC.prototype.method = function() {
+	return NativeB.prototype.method.call(this);
+};
+
+var NativeN = function() {};
+NativeN.prototype = new NativeC();
+NativeN.prototype.method = function() {
+	return NativeC.prototype.method.call(this);
+};
+
 module.exports = {
 	name: 'Superclass methods',
 	tests: {
@@ -48,8 +80,8 @@ module.exports = {
 			var b = new ResigB();
 			b.method();
 		},
-		'Native: new': function() {
-			var b = new NativeB();
+		'Native': function() {
+			var b = new NativeN();
 			b.method();
 		}
 	}
