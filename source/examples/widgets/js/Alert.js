@@ -32,17 +32,21 @@ var Alert = Widget.extend({
 		// First call the superclass' show method
 		this._super();
 		
+		// Then shake the alert
+		this.shake();
+	},
+	
+	shake: function() {
 		this.$el.css({
 			marginTop: -this.$el.outerHeight()/2,
 			marginLeft: -this.$el.outerWidth()/2
 		});
 		
-		// Then shake the alert
 		var by = 20;
 		for (var i = 0; i < 3; i++) {
 			this.$el.animate({
 				marginLeft: '+='+(by = -by)+'px'
-			}, 50);
+			}, 35);
 		}
 	},
 	
