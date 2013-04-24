@@ -55,6 +55,12 @@ module.exports = function(grunt) {
 		watch: {
 			files: ['source/**', 'test/**'],
 			tasks: ['jshint', 'test']
+		},
+		benchmark: {
+			singleTest: {
+				src: ['benchmarks/*.js'],
+				dest: 'build/testResults.csv'
+			}
 		}
 	});
 
@@ -63,8 +69,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-mocha-cov');
+	grunt.loadNpmTasks('grunt-benchmark');
 	
-	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage']);
+	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage', 'benchmark']);
 	grunt.registerTask('test', [ 'jshint', 'mochacov:test']);
-	grunt.registerTask('default', [ 'jshint','test', 'copy', 'uglify']);
+	grunt.registerTask('default', [ 'jshint', 'test', 'copy', 'uglify']);
 };
