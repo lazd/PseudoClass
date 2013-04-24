@@ -41,7 +41,7 @@
 		More than twice as many lines of code, but only 677 bytes minified and gzipped (1,512 bytes uncompressed)
 		Dummy test for usage of super is faster in environments that don't support serialization
 */
-(function() {
+(function(global) {
 	// Given a function, the superTest RE will match if the _super method is referenced in any form
 	// The function will be serialized, then the serialized string will be searched for _super
 	//   Note: This can result in false positives, as comment containing _super will result in a match
@@ -94,7 +94,7 @@
 	};
 
 	// The base Class implementation acts as extend alias, with the exception that it can take properties.extend as the Class to extend
-	this.Class = function(properties) {
+	var Class = function(properties) {
 		// Support referencing the class to extend with properties.extend
 		// With the assumption that the passed class has an extend method, just call extend on the passed class
 		if (properties && properties.extend)
@@ -103,7 +103,7 @@
 	};
 	
 	// Add the mixin method to all classes created with Class
-	this.Class.prototype.mixin = mixin;
+	Class.prototype.mixin = mixin;
 	
 	// Creates a new Class that inherits from this class
 	// Give the function a name so it can refer to itself without arguments.callee
@@ -186,7 +186,18 @@
 		return Class;
 	};
 	
-	// Node.js compatibility
-	if (typeof module !== 'undefined')
+	if (typeof module !== 'undefined' && module.exports) {
+		// Node.js Support
 		module.exports = Class;
-}());
+	}
+	else if (typeof global.define === 'function') {
+		(function(define) {
+			// AMD Support
+			define(function() { return Class; });
+		}(global.define));
+	}
+	else {
+		// Browser support
+		global.Class = Class;
+	}
+}(this));
