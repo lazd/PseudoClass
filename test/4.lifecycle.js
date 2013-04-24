@@ -45,18 +45,6 @@ describe('Class lifecycle:', function() {
 			
 			var b = new B();
 		});
-		
-		it('should get an empty object if the first argument to the constructor is undefined', function() {
-			var A = Class({
-				construct: function(options) {
-					this.options = options;
-				}
-			});
-			var a = new A();
-			
-			expect(a.options).to.be.an('object');
-			expect(Object.keys(a.options).length).to.equal(0);
-		});
 	});
 	
 	describe('destructors', function() {

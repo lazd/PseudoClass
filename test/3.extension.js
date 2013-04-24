@@ -127,20 +127,6 @@ describe('Class extension:', function() {
 			
 			expect(B.prototype.method1()).to.equal(2);
 		});
-		
-		it('should reassign this._super to previous value when execution is done', function() {
-			var B = A.extend({
-				method1: callSuper
-			});
-			
-			var b = new B();
-			
-			b._super = 'superValue';
-			
-			expect(b._super).to.equal('superValue');
-			b.method1();
-			expect(b._super).to.equal('superValue');
-		});
 	});
 	
 	describe('mixins', function() {

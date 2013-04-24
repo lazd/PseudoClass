@@ -37,14 +37,6 @@ describe('Class identity:', function() {
 			expect(c instanceof B).to.be.true;
 			expect(c instanceof C).to.be.true;
 		});
-		
-		it('should be correct for instances of a childclass created without new', function() {
-			var c = C();
-			
-			expect(c instanceof A).to.be.true;
-			expect(c instanceof B).to.be.true;
-			expect(c instanceof C).to.be.true;
-		});
 	});
 	
 	describe('toString', function() {

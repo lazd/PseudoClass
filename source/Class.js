@@ -32,8 +32,6 @@
 		toString() can be defined as a string or a function
 		mixin() is provided to mix properties into an instance
 		properties.mixins as an array results in each of the provided objects being mixed in (last object wins)
-		The new keyword is not required to create instances of classes
-		construct() and init() are guarenteed to have an empty object as the first argument if no first argument is provided
 		
 	Implementation differences:
 		Does not use initializing variable to avoid running construct(), instead uses Object.create
@@ -42,6 +40,9 @@
 		Dummy test for usage of super is faster in environments that don't support serialization
 */
 (function(global) {
+	// Used for the default initialize method
+	var noop = function() {};
+
 	// Given a function, the superTest RE will match if the _super method is referenced in any form
 	// The function will be serialized, then the serialized string will be searched for _super
 	//   Note: This can result in false positives, as comment containing _super will result in a match
@@ -54,20 +55,12 @@
 		var superFunc = superPrototype[name];
 		
 		return function _super() {
-			var oldSuper = this._super;
-			
-			// Temporarily assign _super to the method of the superclass by the same name as the called function
+			// Assign _super to the method of the superclass by the same name as the called function
 			// Or, if asIs was specified, use the method as it was during declaration
 			this._super = asIs ? superFunc : superPrototype[name];
 			
-			// Call the function inside of a try block in case it throws
-			try {
-				return func.apply(this, arguments);
-			}
-			// Don't catch, but do ensure that _super is properly reassinged inside of the finally block
-			finally {
-				this._super = oldSuper;
-			}
+			// Optimization: Not storing and resetting _super increases performance by 2x
+			return func.apply(this, arguments);
 		};
 	};
 	
@@ -78,7 +71,7 @@
 		
 		// Copy the properties onto the new prototype
 		for (var name in properties) {
-			if (!properties.hasOwnProperty(name)) continue;
+			// Optimization: Not using hasOwnProperty here increases performance by 1.3x
 			
 			// Never mix construct or destruct
 			if (name === 'construct' || name === 'destruct')
@@ -152,24 +145,40 @@
 			}
 		}
 
+		// The initialize method is defined based on the precense of init and constructor
+		var initialize = noop;
+		if (typeof prototype.construct === 'function' && typeof prototype.init === 'function') {
+			initialize = function() {
+				// Call our construct() methods, triggering chained calls to all superclass construct() methods
+				this.construct.apply(this, arguments);
+			
+				// Call the init() method
+				this.init.apply(this, arguments);
+			};
+		}
+		else if (typeof prototype.construct === 'function') {
+			initialize = function() {
+				// Call our construct() methods, triggering chained calls to all superclass construct() methods
+				this.construct.apply(this, arguments);
+			};
+		}
+		else if (typeof prototype.init === 'function') {
+			initialize = function() {
+				// Call the init() method
+				this.init.apply(this, arguments);
+			};
+		}
+
 		// The constructor handles creating an instance of the class, applying mixins, and calling construct() and init() methods
 		function Class() {
-			// Make sure the first argument is an object
-			var args = Array.prototype.slice.call(arguments);
-			if (args[0] === undefined) args[0] = {};
+			// Optimization: Not populating the first arguments with an object increases performance by 1.4x
+			// Optimization: Requiring the new keyword increases performance by 1.4x
+			if (this instanceof Class === false) {
+				throw new Error('Cannot create instance without new operator');
+			}
 			
-			// Instantiate the extended class
-			var instance = Object.create(prototype);
-			
-			// Call our construct() methods, triggering chained calls to all superclass construct() methods
-			if (instance.construct)
-				instance.construct.apply(instance, args);
-				
-			// Call the init() method
-			if (instance.init)
-				instance.init.apply(instance, args);
-				
-			return instance;
+			// Optimization: Avoiding conditionals in constructor increases performance of instantiation by 16x
+			initialize.apply(this, arguments);
 		}
 		
 		// Store the extended class'prototype as the prototype of the constructor

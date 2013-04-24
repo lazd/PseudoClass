@@ -25,4 +25,10 @@ describe('Class creation:', function() {
 		var A = new Class(properties);
 		test_method1(A);
 	});
+		
+	it('should throw when attempting to instantiate without new', function() {
+		expect(function() {
+			var A = Class(properties);
+		}).to.Throw;
+	});
 });
