@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 			tasks: ['jshint', 'test']
 		},
 		benchmark: {
-			singleTest: {
+			all: {
 				src: ['benchmarks/*.js'],
 				dest: 'build/testResults.csv'
 			}
