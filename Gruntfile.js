@@ -71,7 +71,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-mocha-cov');
 	grunt.loadNpmTasks('grunt-benchmark');
 	
-	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage', 'benchmark']);
-	grunt.registerTask('test', [ 'jshint', 'mochacov:test']);
-	grunt.registerTask('default', [ 'jshint', 'test', 'copy', 'uglify']);
+	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage', 'benchmark' ]);
+	grunt.registerTask('test', [ 'jshint', 'mochacov:test' ]);
+	grunt.registerTask('default', [ 'test', 'copy', 'uglify' ]);
 };
