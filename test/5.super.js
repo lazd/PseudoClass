@@ -351,4 +351,116 @@ describe('Calling super methods:', function() {
 
 		expect(b.method1(5)).to.equal(8);
 	});
+
+
+	it('should have this set to the correct value when using _super.call(this)', function() {
+		var A = Class({
+			method1: function(num) {
+				expect(this).to.equal(b);
+				return num;
+			}
+		});
+
+		var B = A.extend({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.call(this);
+			}
+		});
+
+		var b = new B();
+
+		b.method1();
+	});
+
+
+
+	it('should have this set to the correct value when using _super.apply(this)', function() {
+		var A = Class({
+			method1: function(num) {
+				expect(this).to.equal(b);
+				return num;
+			}
+		});
+
+		var B = A.extend({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		var b = new B();
+
+		b.method1();
+	});
+
+	it('should have this set to the correct value when using _super.apply(this) and a single mixin', function() {
+		var A = Class({
+			method1: function(num) {
+				expect(this).to.equal(b);
+				return num;
+			}
+		});
+
+		var B = A.extend({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		var b = new B();
+
+		b.mixin({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		b.mixin({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		b.method1();
+	});
+
+	it('should have this set to the correct value when using _super.apply(this) and multiple mixins', function() {
+		var A = Class({
+			method1: function(num) {
+				expect(this).to.equal(b);
+				return num;
+			}
+		});
+
+		var B = A.extend({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		var b = new B();
+
+		b.mixin({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		b.mixin({
+			method1: function(_super) {
+				expect(this).to.equal(b);
+				return _super.apply(this, arguments);
+			}
+		});
+
+		b.method1();
+	});
+
 });

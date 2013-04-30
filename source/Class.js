@@ -43,46 +43,43 @@
 	// If the environment isn't capable of function serialization, make it so superTest.test always returns true
 	var superTest = /xyz/.test(function(){return 'xyz';}) ? /\(\s*_super\b/ : { test: function() { return true; } };
 
+	// Remove the _super function from the passed arguments array
 	var removeSuper = function(args, _super) {
-		// Remove the _super function from the passed arguments array
 		// For performance, first check if at least one argument was passed
 		if (args && args.length && args[0] === _super)
 			args = Array.prototype.slice.call(args, 1);
 		return args;
 	};
 
-	// Statically bind an overriding method such that it gets the overridden method as its first argument
-	// If the passed superPrototype is modified, the bound function will still call the ORIGINAL method
-	// This comes into play when functions are mixed into an object that already has a function by that name
-	var superifyStatic = function(name, func, superPrototype) {
-		var superFunc = superPrototype[name];
-		var _super = function _superStatic() {
-			return superFunc.apply(this, arguments);
-		};
+	// Bind an overriding method such that it gets the overridden method as its first argument
+	var superify = function(name, func, superPrototype, isStatic) {
+		var _super;
 
-		// Redefined apply so _super is stripped from the passed arguments array
+		// We redefine _super.apply so _super is stripped from the passed arguments array
 		// This allows implementors to call _super.apply(this, arguments) without manually stripping off _super
-		_super.apply = function _applier(context, args) {
-			return Function.prototype.apply.call(superFunc, this, removeSuper(args, _super));
-		};
+		if (isStatic) {
+			// Static binding: If the passed superPrototype is modified, the bound function will still call the ORIGINAL method
+			// This comes into play when functions are mixed into an object that already has a function by that name (i.e. two mixins are used)
+			var superFunc = superPrototype[name];
+			_super = function _superStatic() {
+				return superFunc.apply(this, arguments);
+			};
 
-		//
-		return func.bind(this, _super);
-	};
+			_super.apply = function _applier(context, args) {
+				return Function.prototype.apply.call(superFunc, context, removeSuper(args, _super));
+			};
+		}
+		else {
+			// Dynamic binding: If the passed superPrototype is modified, the bound function will call the NEW method
+			// This comes into play when functions are mixed into a class at declaration time
+			_super = function _superDynamic() {
+				return superPrototype[name].apply(this, arguments);
+			};
 
-	// Dynamically bind an overridding method such that it gets the overridden method as its first argument
-	// If the passed superPrototype is modified, the bound function will call the NEW method
-	// This comes into play when functions are mixed into a class at declaration time
-	var superifyDynamic = function(name, func, superPrototype) {
-		var _super = function _superDynamic() {
-			return superPrototype[name].apply(this, arguments);
-		};
-
-		// Redefined apply so _super is stripped from the passed arguments array
-		// This allows implementors to call _super.apply(this, arguments) without manually stripping off _super
-		_super.apply = function _applier(context, args) {
-			return Function.prototype.apply.call(superPrototype[name], this, removeSuper(args, _super));
-		};
+			_super.apply = function _applier(context, args) {
+				return Function.prototype.apply.call(superPrototype[name], context, removeSuper(args, _super));
+			};
+		}
 
 		// Name the function for better stack traces
 		return function _passSuper() {
@@ -114,9 +111,9 @@
 			if (usesSuper) {
 				// Wrap the function such that _super will be passed accordingly
 				if (this.hasOwnProperty(name))
-					this[name] = superifyStatic(name, properties[name], this);
+					this[name] = superify(name, properties[name], this, true);
 				else
-					this[name] = superifyDynamic(name, properties[name], superPrototype);
+					this[name] = superify(name, properties[name], superPrototype, false);
 			}
 			else {
 				// Directly assign the property
