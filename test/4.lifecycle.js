@@ -128,7 +128,7 @@ describe('Class lifecycle:', function() {
 			var b = new B();
 		});
 		
-		it('should support use of this._super()', function() {
+		it('should support use of _super()', function() {
 			var A = Class({
 				init: function() {
 					return 1;
@@ -136,8 +136,8 @@ describe('Class lifecycle:', function() {
 			});
 			
 			var B = A.extend({
-				init: function() {
-					expect(this._super()).to.equal(1);
+				init: function(_super) {
+					expect(_super.call(this)).to.equal(1);
 				}
 			});
 			

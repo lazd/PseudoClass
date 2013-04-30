@@ -3,198 +3,156 @@ var Class = require('../source/Class');
 
 describe('Class extension:', function() {
 	var A;
-	
-	var method1 = function() {
+
+	var return1 = function() {
 		return 1;
 	};
-	var method2 = function() {
+	var return2 = function() {
 		return 2;
 	};
-	var method3 = function() {
+	var return3 = function() {
 		return 3;
 	};
-	var callSuper = function() {
-		return this._super();
+	var callSuper = function(_super) {
+		return _super.call(this);
 	};
-	
-	function test_method1(X) {
+
+	function test_return1(X) {
 		var x = new X();
-		expect(x.method1()).to.equal(1);
+		expect(x.return1()).to.equal(1);
 	}
-	
-	function test_method2(X) {
+
+	function test_return2(X) {
 		var x = new X();
-		expect(x.method2()).to.equal(2);
+		expect(x.return2()).to.equal(2);
 	}
-	
-	function test_method3(X) {
+
+	function test_return3(X) {
 		var x = new X();
-		expect(x.method3()).to.equal(3);
+		expect(x.return3()).to.equal(3);
 	}
-	
+
 	beforeEach(function(done) {
 		// Start fresh by re-defining A before every test
 		A = Class({
 			toString: function() { return 'A'; },
-			method1: method1
+			return1: return1
 		});
-		
+
 		done();
 	});
 
 	describe('inheritance', function() {
 		it('using A.extend()', function() {
 			var B = A.extend({
-				method2: method2
+				return2: return2
 			});
-			
+
 			var C = B.extend({
-				method3: method3
+				return3: return3
 			});
-			
-			test_method1(C);
-			test_method2(C);
-			test_method3(C);
+
+			test_return1(C);
+			test_return2(C);
+			test_return3(C);
 		});
-		
+
 		it('using Class({ extend: A })', function() {
 			var B = Class({
 				extend: A,
-				method2: method2
+				return2: return2
 			});
-			
+
 			var C = Class({
 				extend: B,
-				method3: method3
+				return3: return3
 			});
-			
-			test_method1(C);
-			test_method2(C);
-			test_method3(C);
+
+			test_return1(C);
+			test_return2(C);
+			test_return3(C);
+		});
+
+		it('should call overriding child class method', function() {
+			var B = A.extend({
+				return1: function() {
+					return 3;
+				}
+			});
+			var b = new B();
+
+			// Child class method should override and return 3
+			expect(b.return1()).to.equal(3);
 		});
 	});
-	
-	describe('superclass methods', function() {
-		it('should call overriding childclass method', function() {
-			var B = A.extend({
-				method1: method3
-			});
-			var b = new B();
-			
-			expect(b.method1()).to.equal(3);
-		});
-		
-		it('should call superclass method with this._super()', function() {
-			var B = A.extend({
-				method1: function() {
-					return this._super();
-				}
-			});
-			
-			var b = new B();
-			
-			expect(b.method1()).to.equal(1);
-		});
-		
-		it('should call superclass method with this[\'_super\']()', function() {
-			var B = A.extend({
-				method1: function() {
-					return this['_super']();
-				}
-			});
-			
-			var b = new B();
-			
-			expect(b.method1()).to.equal(1);
-		});
-		
-		it('should throw when calling this._super() in method that does not override', function() {
-			var B = A.extend({
-				methodX: callSuper
-			});
-			
-			var b = new B();
-			
-			expect(b.methodX).to.Throw();
-		});
-		
-		it('should support this._super() for methods called without an instance', function() {
-			var B = A.extend({
-				method1: function() {
-					return this._super()+1;
-				}
-			});
-			
-			expect(B.prototype.method1()).to.equal(2);
-		});
-	});
-	
+
 	describe('mixins', function() {
 		var mixable = {
-			method1: function() {
+			return1: function() {
 				return 1;
 			},
-			method2: function() {
+			return2: function() {
 				return 1;
 			}
 		};
-		
+
 		var mixable2 = {
-			method2: function() {
+			return2: function() {
 				return 2;
 			}
 		};
-		
-		it('with mixin()', function() {
+
+		it('with mixin() on an instance', function() {
 			var A = Class();
 			var a = new A();
-			
+
 			a.mixin(mixable);
-			
-			expect(a.method1()).to.equal(1);
+
+			expect(a.return1()).to.equal(1);
 		});
-		
-		it('with properites.mixins', function() {
+
+		it('with properites.mixins at declaration time', function() {
 			var A = Class({
 				mixins: [mixable, mixable2]
 			});
 			var a = new A();
-			
-			expect(a.method1()).to.equal(1);
-			expect(a.method2()).to.equal(2);
+
+			expect(a.return1()).to.equal(1);
+			expect(a.return2()).to.equal(2);
 		});
-		
-		it('this._super() within mixins', function() {
+
+		it('at declaration and instance time', function() {
 			var A = Class({
-				toString: 'MixedUp',
-				mixins: [
-					{
-						method1: function() {
-							// Should call the method of the class
-							return this._super()+'Mixed';
-						}
-					},
-					{
-						method1: function() {
-							// Should call the method of the previous mixin
-							return this._super()+'Again';
-						}
-					}
-				],
-				method1: function() {
-					return 'Original';
-				}
+				mixins: [mixable]
 			});
-			
+
 			var a = new A();
-			
-			a.mixin({
-				method1: function() {
-					return this._super()+'Last';
-				}
+
+			a.mixin(mixable2);
+
+			expect(a.return1()).to.equal(1);
+			expect(a.return2()).to.equal(2);
+		});
+
+		it('modifying the prototype should override mixins added at declaration time', function() {
+			var A = Class({
+				return1: function() {
+					return 'Original';
+				},
+				mixins: [{
+					return1: function(_super) {
+						return 'Mixed'+_super.call(this);
+					}
+				}]
 			});
-			
-			expect(a.method1()).to.equal('OriginalMixedAgainLast');
+
+			A.prototype.return1 = function() {
+				return 'New';
+			};
+
+			var a = new A();
+
+			expect(a.return1()).to.equal('New');
 		});
 	});
 });

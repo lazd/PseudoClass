@@ -8,18 +8,18 @@ var ClassA = Class.extend({
 	}
 });
 var ClassB = ClassA.extend({
-	method: function() {
-		return this._super();
+	method: function(_super) {
+		return _super.call(this);
 	}
 });
 var ClassC = ClassB.extend({
-	method: function() {
-		return this._super();
+	method: function(_super) {
+		return _super.call(this);
 	}
 });
 var ClassN = ClassC.extend({
-	method: function() {
-		return this._super();
+	method: function(_super) {
+		return _super.call(this);
 	}
 });
 

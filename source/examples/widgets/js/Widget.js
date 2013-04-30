@@ -1,9 +1,9 @@
 // A widget class that handles showing, hiding, and removing an element from the DOM
 var Widget = Class({
 	// Identify ourself
-	toString: function() {
+	toString: function(_super) {
 		// Using the superclass, Base's toString() method
-		return this._super()+'->Widget';
+		return _super.call(this)+'->Widget';
 	},
 	
 	// Extend the Base class
@@ -27,9 +27,8 @@ var Widget = Class({
 	},
 	
 	// The init() method is called after all constructors have been executed
-	// It is passed the same arguments as the construct() method
-	init: function(options) {
-		if (options.visible) {
+	init: function() {
+		if (this.options.visible) {
 			this.show();
 		}
 		else {

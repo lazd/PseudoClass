@@ -48,15 +48,17 @@ var Parent = Class({
 
 ```javascript
 var stuffDoer = {
-	doStuff: function() {
-		this._super();
+	doStuff: function(_super) {
+		_super.call(this);
 		console.log('Mixin: Doing stuff');
 	}
 };
 ```
 
 
-### Inherit from Parent and add a mixin
+### Inherit from Parent and add a mixin to the class prototype
+
+Mixins added at declaration time become part of the prototype.
 
 ```javascript
 var Child = Parent.extend({
@@ -68,8 +70,8 @@ var Child = Parent.extend({
 	destruct: function() {
 		console.log(this+': Destructing');
 	},
-	doStuff: function() {
-		this._super();
+	doStuff: function(_super) {
+		_super.call(this);
 		console.log(this+': Doing stuff');
 	}
 });
@@ -99,7 +101,9 @@ child.doStuff();
 ```
 
 
-### Mixin some more
+### Add a mixin to the instance
+
+Mixins added after instantiation become part of the instance.
 
 ```javascript
 child.mixin({

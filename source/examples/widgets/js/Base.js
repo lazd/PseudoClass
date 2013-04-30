@@ -3,6 +3,9 @@ var Base = Class({
 	toString: 'Base',
 	construct: function(options) {
 		console.log('Base: Constructing...');
+
+		// Store options
+		this.options = options || {};
 	},
 	destruct: function() {
 		console.log('Base: Destructing...');
