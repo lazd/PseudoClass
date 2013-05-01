@@ -90,8 +90,8 @@
 <h3>2. Define a mixin</h3>
 <p>Mixins are a set methods you can plug into any class.</p>
 <code class="prettyprint">var stuffDoer = {
-	doStuff: function() {
-		this._super();
+	doStuff: function(_super) {
+		_super.call(this);
 		console.log('Mixin: Doing stuff');
 	}
 };</code>
@@ -107,8 +107,8 @@
 	destruct: function() {
 		console.log(this+': Destructing');
 	},
-	doStuff: function() {
-		this._super();
+	doStuff: function(_super) {
+		_super.call(this);
 		console.log(this+': Doing stuff');
 	}
 });</code>

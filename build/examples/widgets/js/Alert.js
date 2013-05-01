@@ -1,23 +1,23 @@
 // A basic alert widget
 // We'll extend the Widget using the alternate Widget.extend() static method
 var Alert = Widget.extend({
-	toString: function() {
+	toString: function(_super) {
 		// Call the superclass' toString() method
-		return this._super()+'->Modal';
+		return _super.call(this)+'->Modal';
 	},
 
 	// We'll define an init function that uses our method to setup the alert
-	init: function(options) {
+	init: function(_super) {
 		console.log(this+': Initializing...');
 		
 		// init() isn't chained, so call the superclass init method
-		this._super.apply(this, arguments);
+		_super.apply(this, arguments);
 		
-		if (options.heading)
-			this.setHeading(options.heading);
+		if (this.options.heading)
+			this.setHeading(this.options.heading);
 		
-		if (options.message)
-			this.setMessage(options.message);
+		if (this.options.message)
+			this.setMessage(this.options.message);
 		
 		this.$el.on('click', '[data-close]', function(evt) {
 			evt.preventDefault();
@@ -26,24 +26,25 @@ var Alert = Widget.extend({
 	},
 	
 	// Override the default show method to shake the alert when shown
-	show: function() {
+	show: function(_super) {
 		console.log(this+': Showing');
 		
 		// First call the superclass' show method
-		this._super();
+		_super.call(this);
 		
+		// Position in the center of the screen
+		this.$el.css({
+			marginTop: -this.$el.outerHeight()/2,
+			marginLeft: -this.$el.outerWidth()/2
+		});
+
 		// Then shake the alert
 		this.shake();
 	},
 	
 	shake: function() {
-		this.$el.css({
-			marginTop: -this.$el.outerHeight()/2,
-			marginLeft: -this.$el.outerWidth()/2
-		});
-		
 		var by = 20;
-		for (var i = 0; i < 3; i++) {
+		for (var i = 0; i < 4; i++) {
 			this.$el.animate({
 				marginLeft: '+='+(by = -by)+'px'
 			}, 35);

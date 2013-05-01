@@ -2,8 +2,9 @@ define(['Class'], function(Class) {
 	var Logger = Class({
 		toString: 'Logger',
 		construct: function(options) {
-			// Pull an option from the options array
-			// This works even if no options are passed, as Class will define options as an empty object
+			options = options || {};
+
+			// Pull an option from the options object
 			this.width = options.width || 40;
 			
 			this.log(this+' constructed');
