@@ -4,7 +4,7 @@ var ResigClass = require('./libs/Class.Resig');
 module.exports = {
 	name: 'Class extension',
 	tests: {
-		'Class.js': function() {
+		'PseudoClass': function() {
 			var A = Class.extend({
 				method: function() {
 					return 'test';

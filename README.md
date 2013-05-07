@@ -1,8 +1,8 @@
-# Class  [![Build status][travis-image]][travis] [![Code coverage status][coveralls-image]][coveralls]
-> A JavaScript OOP framework for Node.js and the browser
+# PseudoClass  [![Build status][travis-image]][travis] [![Code coverage status][coveralls-image]][coveralls]
+> An OOP framework for Node.js and the browser
 
 #### Sweet syntactic sugar for prototypal inheritance.
-Class adds `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
+PseudoClass adds `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
 
 #### Not afraid to mix it up.
 Mixins can be added when a class is declared or after instantiation with the `mixin()` method.
@@ -13,17 +13,17 @@ Stay classy and boilerplate-free with string-based `toString` declarations and a
 
 ## Dependencies
 
-Class is completely standalone with no dependencies. All you need to stay classy is [`Class.js`][Class.min.js].
+PseudoClass is completely standalone with no dependencies. All you need to stay classy is [`Class.js`][Class.min.js].
 
 
 ## Compatibility
 
-Class is compatible with the latest modern browsers and the oldest versions of Node.js and even IE 5 (with the use of [`Class.polyfills.js`][Class.polyfills.min.js]).
+PseudoClass is compatible with the latest modern browsers and the oldest versions of Node.js and even IE 5 (with the use of [`Class.polyfills.js`][Class.polyfills.min.js]).
 
 
 ## Usage
 
-Class empowers you without getting in your way. See the examples below to see how Class makes prototypal inheritance painless.
+PseudoClass empowers you without getting in your way. See the examples below to see how PseudoClass makes prototypal inheritance painless.
 
 
 ### Define a class
@@ -141,7 +141,7 @@ child.destruct();
 
 ## License
 
-Class is licensed under the permissive BSD license.
+PseudoClass is licensed under the permissive BSD license.
 
 
 [Class.min.js]: http://lazd.github.io/Class/build/Class.min.js

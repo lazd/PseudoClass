@@ -72,7 +72,7 @@ NativeN.prototype.method = function() {
 module.exports = {
 	name: 'Superclass methods',
 	tests: {
-		'Class.js': function() {
+		'PseudoClass': function() {
 			var b = new ClassB();
 			b.method();
 		},

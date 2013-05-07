@@ -24,7 +24,7 @@ NativeA.prototype.construct = function() {
 module.exports = {
 	name: 'Instance creation',
 	tests: {
-		'Class.js': function() {
+		'PseudoClass': function() {
 			var a = new ClassA();
 		},
 		'Resig': function() {
