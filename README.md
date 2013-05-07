@@ -144,11 +144,11 @@ child.destruct();
 PseudoClass is licensed under the permissive BSD license.
 
 
-[Class.min.js]: http://lazd.github.io/Class/build/Class.min.js
-[Class.polyfills.min.js]: http://lazd.github.io/Class/build/Class.polyfills.min.js
+[Class.min.js]: http://lazd.github.io/PseudoClass/build/Class.min.js
+[Class.polyfills.min.js]: http://lazd.github.io/PseudoClass/build/Class.polyfills.min.js
 
-[coveralls]: https://coveralls.io/r/lazd/Class
-[coveralls-image]: https://coveralls.io/repos/lazd/Class/badge.png?branch=master
+[coveralls]: https://coveralls.io/r/lazd/PseudoClass
+[coveralls-image]: https://coveralls.io/repos/lazd/PseudoClass/badge.png?branch=master
 
-[travis]: http://travis-ci.org/lazd/Class
-[travis-image]: https://secure.travis-ci.org/lazd/Class.png?branch=master
+[travis]: http://travis-ci.org/lazd/PseudoClass
+[travis-image]: https://secure.travis-ci.org/lazd/PseudoClass.png?branch=master
