@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 			}
 		},
 		jshint: {
-			files: ['gruntfile.js', 'source/**/*.js'],
+			files: ['Gruntfile.js', 'source/**/*.js'],
 			options: {
 				globals: {
 					eqeqeq: true

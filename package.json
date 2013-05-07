@@ -1,15 +1,15 @@
 {
-  "name": "Class",
-  "version": "0.2.0",
-  "homepage": "https://lazd.github.com/Class",
-  "author": "Larry Davis",
+  "name": "pseudoclass",
+  "version": "0.2.5",
+  "homepage": "https://lazd.github.com/PseudoClass",
+  "author": "Larry Davis <lazdnet@gmail.com>",
   "license": "BSD",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lazd/Class.git"
+    "url": "https://github.com/lazd/PseudoClass.git"
   },
   "bugs": {
-    "url": "https://github.com/lazd/Class/issues"
+    "url": "https://github.com/lazd/PseudoClass/issues"
   },
   "devDependencies": {
     "grunt-cli": "~0.1.7",
@@ -29,5 +29,20 @@
       ]
     },
     "test": "grunt test"
-  }
+  },
+  "main": "source/Class.js",
+  "engines": {
+    "node": ">=0.8"
+  },
+  "files": [
+    "source/",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "class",
+    "inheritance",
+    "oop",
+    "extend"
+  ]
 }
