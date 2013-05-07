@@ -1,6 +1,9 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		clean: {
+			build: 'build/'
+		},
 		copy: {
 			js: {
 				expand: true,
@@ -65,6 +68,7 @@ module.exports = function(grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-copy');
@@ -73,5 +77,5 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage', 'benchmark' ]);
 	grunt.registerTask('test', [ 'jshint', 'mochacov:test' ]);
-	grunt.registerTask('default', [ 'test', 'copy', 'uglify' ]);
+	grunt.registerTask('default', [ 'clean', 'test', 'copy', 'uglify' ]);
 };
