@@ -43,3 +43,7 @@
 	cursor: none;
 	pointer-events: none;
 }
+
+section #title h1 {
+	margin-top: 80px;
+}
