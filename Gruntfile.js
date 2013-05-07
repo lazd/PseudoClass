@@ -27,8 +27,8 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'build/<%= pkg.name %>.min.js': ['build/Class.js'],
-					'build/<%= pkg.name %>.polyfills.min.js': ['build/Class.polyfills.js']
+					'build/Class.min.js': ['build/Class.js'],
+					'build/Class.polyfills.min.js': ['build/Class.polyfills.js']
 				}
 			}
 		},

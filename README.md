@@ -2,7 +2,7 @@
 > An OOP framework for Node.js and the browser
 
 #### Sweet syntactic sugar for prototypal inheritance.
-PseudoClass adds `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
+PseudoClass provides `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
 
 #### Not afraid to mix it up.
 Mixins can be added when a class is declared or after instantiation with the `mixin()` method.
