@@ -139,6 +139,36 @@ child.destruct();
 */
 ```
 
+
+## A word about minification
+
+PseudoClass analyzes a method's string representation to determine if the `_super` argument is used. **If your minfier mangles variable names, you need to configure it to ignore `_super` for your entire project**, otherwise PseudoClass will be unable to tell if your function uses an overridden method.
+
+Here's how to avoid mangling `_super` when using UglifyJS:
+
+#### grunt-contrib-uglify configuration in Gruntfile.js
+```javascript
+uglify: {
+	options: {
+		mangle: {
+			except: ['_super']
+		}
+	},
+	// ...
+}
+```
+
+#### UglifyJS2 shell command
+```shell
+uglifyjs ... -m -r '_super'
+```
+
+#### UglifyJS (deprecated) shell command
+```shell
+uglifyjs --reserved-names '_super' ... 
+```
+
+
 ## License
 
 PseudoClass is licensed under the permissive BSD license.
