@@ -45,6 +45,16 @@ describe('Class lifecycle:', function() {
 			
 			var b = new B();
 		});
+
+		it('should work when called as instance.constructor()', function() {
+			var A = Class();
+
+			var a = new A();
+
+			var a1 = new a.constructor();
+
+			expect(a1 instanceof A).to.be.true;
+		});
 	});
 	
 	describe('destructors', function() {

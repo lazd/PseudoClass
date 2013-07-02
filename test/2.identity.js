@@ -5,10 +5,14 @@ describe('Class identity:', function() {
 	describe('constructor property', function() {
 		it('should be set to the class that constructed the instance', function() {
 			var A = Class();
+
+			var a = new A();
+
 			var B = A.extend();
 			
 			var b = new B();
 			
+			expect(a.constructor).to.equal(A);
 			expect(b.constructor).to.equal(B);
 		});
 	});
@@ -63,6 +67,43 @@ describe('Class identity:', function() {
 			});
 			
 			test_toString(A);
+		});
+	});
+
+
+	describe('superPrototype', function() {
+		var A, B, C;
+
+		beforeEach(function(done) {
+			A = Class({
+				val: 1
+			});
+			B = A.extend({
+				val: 2
+			});
+			C = B.extend({
+				val: 3
+			});
+
+			done();
+		});
+
+		it('should allow walking the prototype chain', function() {
+			var c = new C();
+
+			var expected = 3;
+
+			// Start with our prototype
+			var proto = c.constructor.prototype;
+
+			while (expected > 0) {
+				// Check for expected value
+				expect(proto.val).to.equal(expected);
+
+				// Move to the next prototype
+				proto = proto.superPrototype;
+				expected--;
+			}
 		});
 	});
 });
