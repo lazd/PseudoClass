@@ -7,7 +7,7 @@
 
 	Initialization:
 		Initialziation that needs to happen after all construct() methods have been called should be done in the init() method.
-		The init() method is not automatically chained, so you must call _super() if you intend to call the superclass' init method.
+		The init() method is not automatically chained, so you must call this._super() if you intend to call the superclass' init method.
 		init() is not passed any arguments
 
 	Destruction:
@@ -26,98 +26,81 @@
 		Inspired by Simple JavaScript Inheritance by John Resig http://ejohn.org/
 
 	Usage differences:
-		construct() is used to setup instances and is automatically chained so superclass construct() methods run automatically
-		destruct() is used  to tear down instances. destruct() is also chained
+		construct() is used to setup instances and is chained so superclass construct() methods run automatically
+		destruct() is used to tear down instances. destruct() is also chained
 		init(), if defined, is called after construction is complete and is not chained
 		toString() can be defined as a string or a function
 		mixin() is provided to mix properties into an instance
 		properties.mixins as an array results in each of the provided objects being mixed in (last object wins)
-		_super is passed as an argument (not as this._super) and can be used asynchronously
+		this._super() is supported in mixins
 */
 (function(global) {
 	// Used for default initialization methods
 	var noop = function() {};
 
-	// Given a function, the superTest RE will match if _super is the first argument to a function
+	// Given a function, the superTest RE will match if _super is used in the function
 	// The function will be serialized, then the serialized string will be searched for _super
 	// If the environment isn't capable of function serialization, make it so superTest.test always returns true
-	var superTest = /xyz/.test(function(){return 'xyz';}) ? /\(\s*_super\b/ : { test: function() { return true; } };
-
-	// Remove the _super function from the passed arguments array
-	var removeSuper = function(args, _super) {
-		// For performance, first check if at least one argument was passed
-		if (args && args.length && args[0] === _super)
-			args = Array.prototype.slice.call(args, 1);
-		return args;
-	};
+	var superTest = /xyz/.test(function(){return 'xyz';}) ? /\._super\b/ : { test: function() { return true; } };
 
 	// Bind an overriding method such that it gets the overridden method as its first argument
-	var superify = function(name, func, superPrototype, isStatic) {
-		var _super;
+	var superifyDynamic = function(name, func, superPrototype) {
+		return function PseudoClass_setStaticSuper() {
+			// Use the method from the superclass' prototype
+			// This strategy allows monkey patching (modification of superclass prototypes)
+			this._super = superPrototype[name];
 
-		// We redefine _super.apply so _super is stripped from the passed arguments array
-		// This allows implementors to call _super.apply(this, arguments) without manually stripping off _super
-		if (isStatic) {
-			// Static binding: If the passed superPrototype is modified, the bound function will still call the ORIGINAL method
-			// This comes into play when functions are mixed into an object that already has a function by that name (i.e. two mixins are used)
-			var superFunc = superPrototype[name];
-			_super = function _superStatic() {
-				return superFunc.apply(this, arguments);
-			};
+			// Call the actual function
+			return func.apply(this, arguments);
+		};
+	};
 
-			_super.apply = function _applier(context, args) {
-				return Function.prototype.apply.call(superFunc, context, removeSuper(args, _super));
-			};
-		}
-		else {
-			// Dynamic binding: If the passed superPrototype is modified, the bound function will call the NEW method
-			// This comes into play when functions are mixed into a class at declaration time
-			_super = function _superDynamic() {
-				return superPrototype[name].apply(this, arguments);
-			};
+	var superifyStatic = function(name, func, object) {
+		// Store a reference to the overridden function
+		var _super = object[name];
 
-			_super.apply = function _applier(context, args) {
-				return Function.prototype.apply.call(superPrototype[name], context, removeSuper(args, _super));
-			};
-		}
+		return function PseudoClass_setDynamicSuper() {
+			// Use the method stored at declaration time
+			this._super = _super;
 
-		// Name the function for better stack traces
-		return function _passSuper() {
-			// Add the super function to the start of the arguments array
-			var args = Array.prototype.slice.call(arguments);
-			args.unshift(_super);
-
-			// Call the function with the modified arguments
-			return func.apply(this, args);
+			// Call the actual function
+			return func.apply(this, arguments);
 		};
 	};
 
 	// Mix the provided properties into the current context with the ability to call overridden methods with _super()
 	var mixin = function(properties, superPrototype) {
-		// Use this instance
+		// Use this instance's prototype if no prototype provided
 		superPrototype = superPrototype || this.constructor && this.constructor.prototype;
 		
 		// Copy the properties onto the new prototype
 		for (var name in properties) {
+			var value = properties[name];
+
 			// Never mix construct or destruct
 			if (name === 'construct' || name === 'destruct')
 				continue;
 
-			// Check if the function uses _super
-			// It should be a function, the super prototype should have a function by the same name
-			// And finally, the function should take _super as its first argument
-			var usesSuper = superPrototype && typeof properties[name] === 'function' && typeof superPrototype[name] === 'function' && superTest.test(properties[name]);
+			// Check if the property if a method that makes use of _super:
+			// 1. The value should be a function
+			// 2. The super prototype should have a function by the same name
+			// 3. The function should use this._super somewhere
+			var usesSuper = superPrototype && typeof value === 'function' && typeof superPrototype[name] === 'function' && superTest.test(value);
 
 			if (usesSuper) {
-				// Wrap the function such that _super will be passed accordingly
-				if (this.hasOwnProperty(name))
-					this[name] = superify(name, properties[name], this, true);
-				else
-					this[name] = superify(name, properties[name], superPrototype, false);
+				// Wrap the function such that this._super will be available
+				if (this.hasOwnProperty(name)) {
+					// Properties that exist directly on the object should be superified statically
+					this[name] = superifyStatic(name, value, this);
+				}
+				else {
+					// Properties that are part of the superPrototype should be superified dynamically
+					this[name] = superifyDynamic(name, value, superPrototype);
+				}
 			}
 			else {
 				// Directly assign the property
-				this[name] = properties[name];
+				this[name] = value;
 			}
 		}
 	};
@@ -159,24 +142,32 @@
 			}
 			
 			// Chain the construct() method (supermost executes first) if necessary
-			if (properties.construct && superPrototype.construct) {
-				prototype.construct = function() {
-					superPrototype.construct.apply(this, arguments);
-					properties.construct.apply(this, arguments);
-				};
+			if (properties.construct) {
+				var construct = properties.construct;
+				if (superPrototype.construct) {
+					prototype.construct = function() {
+						superPrototype.construct.apply(this, arguments);
+						construct.apply(this, arguments);
+					};
+				}
+				else {
+					prototype.construct = construct;
+				}
 			}
-			else if (properties.construct)
-				prototype.construct = properties.construct;
 			
 			// Chain the destruct() method in reverse order (supermost executes last) if necessary
-			if (properties.destruct && superPrototype.destruct) {
-				prototype.destruct = function() {
-					properties.destruct.apply(this, arguments);
-					superPrototype.destruct.apply(this, arguments);
-				};
-			}
-			else if (properties.destruct)
-				prototype.destruct = properties.destruct;
+			if (properties.destruct) {
+				var destruct = properties.destruct;
+				if (superPrototype.destruct) {
+					prototype.destruct = function() {
+						destruct.apply(this, arguments);
+						superPrototype.destruct.apply(this, arguments);
+					};
+				}
+				else {
+					prototype.destruct = destruct;
+				}
+			} 
 			
 			// Allow definition of toString as a string (turn it into a function)
 			if (typeof properties.toString === 'string') {
@@ -241,6 +232,6 @@
 	}
 	else {
 		// Browser support
-		global.Class = Class;
+		global.Class = global.PseudoClass = Class;
 	}
 }(this));

@@ -62,10 +62,26 @@ module.exports = function(grunt) {
 			files: ['source/**', 'test/**'],
 			tasks: ['jshint', 'test']
 		},
-		benchmark: {
+		bench: {
 			all: {
 				src: ['benchmarks/*.js'],
-				dest: 'build/testResults.csv'
+				dest: 'build/results/benchmark.csv'
+			},
+			creation: {
+				src: ['benchmarks/creation.js'],
+				dest: 'build/results/benchmark_creation.csv'
+			},
+			definition: {
+				src: ['benchmarks/definition.js'],
+				dest: 'build/results/benchmark_definition.csv'
+			},
+			extension: {
+				src: ['benchmarks/extension.js'],
+				dest: 'build/results/benchmark_extension.csv'
+			},
+			super: {
+				src: ['benchmarks/super.js'],
+				dest: 'build/results/benchmark_super.csv'
 			}
 		}
 	});
@@ -78,7 +94,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-mocha-cov');
 	grunt.loadNpmTasks('grunt-benchmark');
 	
-	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage', 'benchmark' ]);
+	grunt.renameTask('benchmark', 'bench');
+	grunt.registerTask('benchmark', 'bench:all');
+
+	grunt.registerTask('travis', [ 'jshint', 'mochacov:coverage' ]);
 	grunt.registerTask('test', [ 'jshint', 'mochacov:test' ]);
 	grunt.registerTask('default', [ 'clean', 'test', 'copy', 'uglify' ]);
 };

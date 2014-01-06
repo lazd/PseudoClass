@@ -1,25 +1,25 @@
 var Class = require('../source/Class');
 var ResigClass = require('./libs/Class.Resig');
 
-// Class
+// PseudoClass
 var ClassA = Class.extend({
 	method: function() {
 		return 'test';
 	}
 });
 var ClassB = ClassA.extend({
-	method: function(_super) {
-		return _super.call(this);
+	method: function() {
+		return this._super();
 	}
 });
 var ClassC = ClassB.extend({
-	method: function(_super) {
-		return _super.call(this);
+	method: function() {
+		return this._super();
 	}
 });
 var ClassN = ClassC.extend({
-	method: function(_super) {
-		return _super.call(this);
+	method: function() {
+		return this._super();
 	}
 });
 
@@ -54,35 +54,36 @@ NativeA.prototype.method = function() {
 var NativeB = function() {};
 NativeB.prototype = new NativeA();
 NativeB.prototype.method = function() {
-	return NativeA.prototype.method.call(this);
+	return NativeA.prototype.method.apply(this, arguments);
 };
 
 var NativeC = function() {};
 NativeC.prototype = new NativeB();
 NativeC.prototype.method = function() {
-	return NativeB.prototype.method.call(this);
+	return NativeB.prototype.method.apply(this, arguments);
 };
 
 var NativeN = function() {};
 NativeN.prototype = new NativeC();
 NativeN.prototype.method = function() {
-	return NativeC.prototype.method.call(this);
+	return NativeC.prototype.method.apply(this, arguments);
 };
+
+var nativeN = new NativeN();
+var resigN = new ResigN();
+var pseudoClassN = new ClassN();
 
 module.exports = {
 	name: 'Superclass methods',
 	tests: {
 		'PseudoClass': function() {
-			var b = new ClassB();
-			b.method();
+			pseudoClassN.method();
 		},
 		'Resig': function() {
-			var b = new ResigB();
-			b.method();
+			resigN.method();
 		},
 		'Native': function() {
-			var b = new NativeN();
-			b.method();
+			nativeN.method();
 		}
 	}
 };

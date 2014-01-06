@@ -1,6 +1,6 @@
 {
   "name": "pseudoclass",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "homepage": "https://lazd.github.com/PseudoClass",
   "author": "Larry Davis <lazdnet@gmail.com>",
   "license": "BSD",
@@ -12,16 +12,15 @@
     "url": "https://github.com/lazd/PseudoClass/issues"
   },
   "devDependencies": {
-    "grunt-cli": "~0.1.7",
-    "grunt": "~0.4.1",
-    "grunt-benchmark": "git://github.com/lazd/grunt-benchmark.git",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-watch": "~0.3.1",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt-mocha-cov": "~0.0.4",
-    "chai": "~1.5.0"
+    "grunt": "~0.4.2",
+    "grunt-benchmark": "~0.2.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-mocha-cov": "~0.1.1",
+    "chai": "~1.8.1"
   },
   "scripts": {
     "blanket": {

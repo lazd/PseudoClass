@@ -10,7 +10,7 @@ module.exports = Class({
 	// Load the Colorizer mixin to gain the colorize method
 	mixins: [require('./Colorizer')],
 	
-	doLog: function(_super, message) {
+	doLog: function(message) {
 		// Colorize the first argument if it's a string
 		var args = this.args(arguments);
 		var type = args[args.length-1];
@@ -25,11 +25,11 @@ module.exports = Class({
 		}
 		
 		// Apply the modified arguments to the doLog() method of the superclass
-		_super.apply(this, args);
+		this._super.apply(this, args);
 	},
 	
-	getDate: function(_super) {
+	getDate: function() {
 		// Call the superclass' getDate() method, but wrap its output in bold tags
-		return this.colorize('<b>'+_super()+'</b>');
+		return this.colorize('<b>'+this._super()+'</b>');
 	}
 });

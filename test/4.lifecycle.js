@@ -46,6 +46,28 @@ describe('Class lifecycle:', function() {
 			var b = new B();
 		});
 
+		it('should chain if class in chain does not have construct', function() {
+			var aConstructCalled = false;
+
+			var A = Class({
+				construct: function() {
+					aConstructCalled = true;
+				}
+			});
+
+			var B = A.extend({
+			});
+
+			var C = A.extend({
+				construct: function() {
+				}
+			});
+
+			var c = new C();
+
+			expect(aConstructCalled).to.be.true;
+		});
+
 		it('should work when called as instance.constructor()', function() {
 			var A = Class();
 
@@ -78,6 +100,29 @@ describe('Class lifecycle:', function() {
 			expect(b.B).to.be.true;
 		});
 		
+		it('should chain if class in chain does not have destruct', function() {
+			var aDestructCalled = false;
+
+			var A = Class({
+				destruct: function() {
+					aDestructCalled = true;
+				}
+			});
+
+			var B = A.extend({
+			});
+
+			var C = A.extend({
+				destruct: function() {
+				}
+			});
+
+			var c = new C();
+			c.destruct();
+
+			expect(aDestructCalled).to.be.true;
+		});
+
 		it('should execute in the correct order (childclass first)', function() {
 			var destructed = {};
 			function handleDestruct(name) {
@@ -146,8 +191,8 @@ describe('Class lifecycle:', function() {
 			});
 			
 			var B = A.extend({
-				init: function(_super) {
-					expect(_super.call(this)).to.equal(1);
+				init: function() {
+					expect(this._super.call(this)).to.equal(1);
 				}
 			});
 			

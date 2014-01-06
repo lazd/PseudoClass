@@ -1,17 +1,17 @@
 // A basic alert widget
 // We'll extend the Widget using the alternate Widget.extend() static method
 var Alert = Widget.extend({
-	toString: function(_super) {
+	toString: function() {
 		// Call the superclass' toString() method
-		return _super.call(this)+'->Modal';
+		return this._super()+'->Modal';
 	},
 
 	// We'll define an init function that uses our method to setup the alert
-	init: function(_super) {
+	init: function() {
 		console.log(this+': Initializing...');
 		
 		// init() isn't chained, so call the superclass init method
-		_super.apply(this, arguments);
+		this._super.apply(this, arguments);
 		
 		if (this.options.heading)
 			this.setHeading(this.options.heading);
@@ -26,11 +26,11 @@ var Alert = Widget.extend({
 	},
 	
 	// Override the default show method to shake the alert when shown
-	show: function(_super) {
+	show: function() {
 		console.log(this+': Showing');
 		
 		// First call the superclass' show method
-		_super.call(this);
+		this._super();
 		
 		// Position in the center of the screen
 		this.$el.css({

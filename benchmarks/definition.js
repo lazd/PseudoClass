@@ -18,13 +18,7 @@ module.exports = {
 				}
 			});
 		},
-		'Native (new)': function() {
-			var A = function() {};
-			A.prototype.method = function() {
-				return 'test';
-			};
-		},
-		'Native (Object.create)': function() {
+		'Native': function() {
 			var A = function() {};
 			A.prototype.method = function() {
 				return 'test';

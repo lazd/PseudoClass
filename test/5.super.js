@@ -21,8 +21,8 @@ describe('Calling super methods:', function() {
 
 	it('should call superclass method with _super()', function() {
 		var B = A.extend({
-			method1: function(_super) {
-				return _super.call(this);
+			method1: function() {
+				return this._super();
 			}
 		});
 
@@ -31,10 +31,25 @@ describe('Calling super methods:', function() {
 		expect(b.method1()).to.equal(1);
 	});
 
+	it('should call superclass method with _super() if intermediate class does not have method', function() {
+		var B = A.extend({
+		});
+
+		var C = B.extend({
+			method1: function() {
+				return this._super();
+			}
+		});
+
+		var c = new C();
+
+		expect(c.method1()).to.equal(1);
+	});
+
 	it('should throw when calling _super() in method that does not override', function() {
 		var B = A.extend({
-			methodX: function(_super) {
-				return _super.call(this);
+			methodX: function() {
+				return this._super();
 			}
 		});
 
@@ -45,8 +60,8 @@ describe('Calling super methods:', function() {
 
 	it('should support _super() for methods called without an instance', function() {
 		var B = A.extend({
-			method1: function(_super) {
-				return _super.call(this)+1;
+			method1: function() {
+				return this._super()+1;
 			}
 		});
 
@@ -61,8 +76,8 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			add: function(_super, a, b) {
-				return _super.call(this, a, b);
+			add: function(a, b) {
+				return this._super(a, b);
 			}
 		});
 
@@ -71,18 +86,19 @@ describe('Calling super methods:', function() {
 		expect(b.add(2, 4)).to.equal(6);
 	});
 
-	it('should support _super() asynchronously', function() {
+	it('should support _super() asynchronously without manually setting context', function(done) {
 		var B = A.extend({
-			method1: function(_super) {
-				var self = this;
+			method1: function() {
+				var _super = this._super;
 
 				// Delay calling super for 100ms
 				setTimeout(function() {
-					expect(_super.call(self)).to.equal(1);
+					expect(_super()).to.equal(1);
+					done();
 				}, 100);
 			},
-			method2: function(_super) {
-				return _super.call(this);
+			method2: function() {
+				return this._super();
 			}
 		});
 
@@ -99,9 +115,9 @@ describe('Calling super methods:', function() {
 			},
 			mixins: [
 				{
-					method1: function(_super) {
+					method1: function() {
 						// Should call the method of the class
-						return _super.call(this)+'Mixed';
+						return this._super()+'Mixed';
 					}
 				}
 			]
@@ -120,21 +136,21 @@ describe('Calling super methods:', function() {
 			},
 			mixins: [
 				{
-					method1: function(_super) {
+					method1: function() {
 						// Should call the method of the class
-						return _super.call(this)+'Mixed';
+						return this._super()+'Mixed';
 					}
 				},
 				{
-					method1: function(_super) {
+					method1: function() {
 						// Should call the method of the previous mixin
-						return _super.call(this)+'Again';
+						return this._super()+'Again';
 					}
 				},
 				{
-					method1: function(_super) {
+					method1: function() {
 						// Should call the method of the previous mixin
-						return _super.call(this)+'Twice';
+						return this._super()+'Twice';
 					}
 				}
 			]
@@ -157,9 +173,9 @@ describe('Calling super methods:', function() {
 		var a = new A();
 
 		a.mixin({
-			method1: function(_super) {
+			method1: function() {
 				// Should call the method of the class
-				return _super.call(this)+'Mixed';
+				return this._super()+'Mixed';
 			}
 		});
 
@@ -177,23 +193,23 @@ describe('Calling super methods:', function() {
 		var a = new A();
 
 		a.mixin({
-			method1: function(_super) {
+			method1: function() {
 				// Should call the method of the class
-				return _super.call(this)+'Mixed';
+				return this._super()+'Mixed';
 			}
 		});
 
 		a.mixin({
-			method1: function(_super) {
+			method1: function() {
 				// Should call the method of the previous mixin
-				return _super.call(this)+'Again';
+				return this._super()+'Again';
 			}
 		});
 
 		a.mixin({
-			method1: function(_super) {
+			method1: function() {
 				// Should call the method of the previous mixin
-				return _super.call(this)+'Twice';
+				return this._super()+'Twice';
 			}
 		});
 
@@ -212,8 +228,8 @@ describe('Calling super methods:', function() {
 		var a = new A();
 
 		a.mixin({
-			method1: function(_super) {
-				return _super.call(this)+'MixedLater';
+			method1: function() {
+				return this._super()+'MixedLater';
 			}
 		});
 
@@ -228,8 +244,8 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
-				return _super.call(this);
+			method1: function() {
+				return this._super();
 			}
 		});
 
@@ -242,8 +258,8 @@ describe('Calling super methods:', function() {
 		expect(b.method1()).to.equal('New');
 
 		b.mixin({
-			method1: function(_super) {
-				return 'MixedAgain'+_super.call(this);
+			method1: function() {
+				return 'MixedAgain'+this._super();
 			}
 		});
 
@@ -264,8 +280,8 @@ describe('Calling super methods:', function() {
 		};
 
 		a.mixin({
-			method1: function(_super) {
-				return 'Mixed'+_super.call(this);
+			method1: function() {
+				return 'Mixed'+this._super();
 			}
 		});
 
@@ -280,8 +296,8 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super, number) {
-				return _super.apply(this, arguments);
+			method1: function(number) {
+				return this._super.apply(this, arguments);
 			}
 		});
 
@@ -299,18 +315,18 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
-				return _super.apply(this, arguments)+1;
+			method1: function() {
+				return this._super.apply(this, arguments)+1;
 			},
 			mixins: [
 				{
-					method1: function(_super) {
-						return _super.apply(this, arguments)+1;
+					method1: function() {
+						return this._super.apply(this, arguments)+1;
 					}
 				}, 
 				{
-					method1: function(_super) {
-						return _super.apply(this, arguments)+1;
+					method1: function() {
+						return this._super.apply(this, arguments)+1;
 					}
 				}
 			]
@@ -330,22 +346,22 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
-				return _super.apply(this, arguments)+1;
+			method1: function() {
+				return this._super.apply(this, arguments)+1;
 			}
 		});
 
 		var b = new B();
 
 		b.mixin({
-			method1: function(_super) {
-				return _super.apply(this, arguments)+1;
+			method1: function() {
+				return this._super.apply(this, arguments)+1;
 			}
 		});
 
 		b.mixin({
-			method1: function(_super) {
-				return _super.apply(this, arguments)+1;
+			method1: function() {
+				return this._super.apply(this, arguments)+1;
 			}
 		});
 
@@ -353,7 +369,7 @@ describe('Calling super methods:', function() {
 	});
 
 
-	it('should have this set to the correct value when using _super.call(this)', function() {
+	it('should have this set to the correct value when using _super()', function() {
 		var A = Class({
 			method1: function(num) {
 				expect(this).to.equal(b);
@@ -362,9 +378,9 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.call(this);
+				return this._super();
 			}
 		});
 
@@ -384,9 +400,9 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
@@ -404,25 +420,25 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
 		var b = new B();
 
 		b.mixin({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
 		b.mixin({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
@@ -438,25 +454,25 @@ describe('Calling super methods:', function() {
 		});
 
 		var B = A.extend({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
 		var b = new B();
 
 		b.mixin({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
 		b.mixin({
-			method1: function(_super) {
+			method1: function() {
 				expect(this).to.equal(b);
-				return _super.apply(this, arguments);
+				return this._super.apply(this, arguments);
 			}
 		});
 
