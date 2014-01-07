@@ -46,6 +46,8 @@ var Parent = Class({
 
 ### Define a mixin
 
+A mixin is a set methods you can plug into any class. Mixins can use `_super`, just like normal methods.
+
 ```javascript
 var stuffDoer = {
 	doStuff: function(_super) {
@@ -81,7 +83,7 @@ var Child = Parent.extend({
 ### Create an instance
 
 ```
-var child = new Child(); // The new keyword is optional
+var child = new Child();
 /* Output:
 	Parent: Constructing
 	Child: Constructing
