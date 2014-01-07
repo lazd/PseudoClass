@@ -11,7 +11,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Dancing+Script:400,700' rel='stylesheet' type='text/css'>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="//lazd.github.io/F/js/respond.js"></script>
-	
+
 	<link href="//lazd.github.io/F/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 	<link href="//lazd.github.io/F/google-code-prettify/sunburst.css" type="text/css" rel="stylesheet">
 	<script type="text/javascript" src="//lazd.github.io/F/google-code-prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 			<li class="downloads"><a href="http://lazd.github.io/PseudoClass/build/PseudoClass.min.js"><i class="icon-download-alt"></i> Download</a></li>
 
 			<li class="spacer"></li>
-			
+
 			<div class="logo">PseudoClass</div>
 			<!--
 			<li class="downloads disabled"><a href="build/jsdoc/index.html"><i class="icon-info-sign"></i> API Docs</a></li>
@@ -52,28 +52,30 @@
 
 			<h2>Sweet syntactic sugar for prototypal inheritance.</h2>
 			<p><span class="logo">PseudoClass</span> provides <span class="code"><span class="typ">construct</span>()</span>, <span class="code"><span class="typ">destruct</span>()</span>, <span class="code"><span class="typ">_super</span>()</span>, and an <span class="code"><span class="typ">init</span>()</span> method that runs after construction is complete.</p>
-			
+
+			<h2>All the same under the hood.</h2>
+			<p><span class="logo">PseudoClass</span> uses JavaScript constructors and prototypal inheritance under the hood. <br>Monkey-patching, <span class="code">instanceof</span>, and <span class="code">instance.constructor</span> all work as expected.</p>
+
 			<h2>Not afraid to mix it up.</h2>
 			<p>Mixins can be added when a class is declared or after instantiation with the <span class="code"><span class="typ">mixin</span>()</span> method.</p>
-			
+
 			<h2>Crushes boilerplate with a classy touch.</h2>
 			<p>Stay classy and boilerplate-free with string-based <span class="code"><span class="typ">toString</span></span> declarations and automatic chaining of <span class="code"><span class="typ">construct</span>()</span> and <span class="code"><span class="typ">destruct</span>()</span>.</p>
-			
 		</section>
-		
+
 		<section class="buttonDrawer center">
 			<!-- <a class="button right" href="build/jsdoc/index.html"><i class="icon-info-sign"></i> API Docs</a> -->
 			<a class="button" href="build/examples/widgets/index.html" target="_blank">See <span class="logo">PseudoClass</span> in action</a>
 			<a class="button" href="http://lazd.github.io/PseudoClass/build/Class.min.js"><i class="icon-download-alt"></i> Download</a>
 		</section>
-		
+
 		<section class="clear">
 			<h2>Getting started is easy.</h2>
-			
+
 			<section>
 
 <h3>1. Define a class:</h3>
-<p>It's a class in the classical sense on top with JavaScript prototypal inheritance underneath.</p>
+<p>Define your class methods as properties of an object pass to <span class="code"><span class="typ">Class</span>()</span> to create a new class.</p>
 <code class="prettyprint">var Parent = Class({
 	toString: 'Parent',
 	construct: function() {
@@ -88,7 +90,7 @@
 });</code>
 
 <h3>2. Define a mixin</h3>
-<p>Mixins are a set methods you can plug into any class.</p>
+<p>A mixin is a set methods you can plug into any class. Mixins can use <span class="code"><span class="typ">_super</span>()</span>, just like normal methods.</p>
 <code class="prettyprint">var stuffDoer = {
 	doStuff: function(_super) {
 		_super.call(this);
@@ -112,10 +114,10 @@
 		console.log(this+': Doing stuff');
 	}
 });</code>
-	
+
 <h3>4. Create an instance</h3>
-<p>Fire it up! <span class="code"><span class="typ">construct</span>()</span> is automatically chained, and the Parent's method is called first.</p>
-<code class="prettyprint">var child = new Child(); // The new keyword is optional
+<p>Fire it up! <span class="code"><span class="typ">construct</span>()</span> is automatically chained, and the with the parent-most <span class="code"><span class="typ">construct</span>()</span>  method called first.</p>
+<code class="prettyprint">var instance = new Child(); // The new keyword is optional
 /* Output:
 	Parent: Constructing
 	Child: Constructing
@@ -123,38 +125,42 @@
 
 <h3>5. Call a method</h3>
 <p>Watch <span class="logo">PseudoClass</span> call overridden methods for you when you use <span class="code"><span class="typ">_super</span>()</span>.</p>
-<code class="prettyprint">child.doStuff();
+<code class="prettyprint">instance.doStuff();
 /* Output:
 	Parent: Doing stuff
 	Child: Doing stuff
 	Mixin: Doing stuff
 */</code>
 
-<h3>5. Check yo' self</h3>
+<h3>5. Add a mixin to the instance</h3>
 <p>Mixins can be added after the class is instantiated.</p>
-<code class="prettyprint">child.mixin({
+<code class="prettyprint">instance.mixin({
 	doMoreStuff: function() {
 		console.log(this+': Doing more stuff')
 	}
 });
 
-child.doMoreStuff();
+instance.doMoreStuff();
 /* Output:
 	Child: Doing more stuff
 */</code>
 
-<h3>5. Wreck yo' self</h3>
-<p><span class="code"><span class="typ">destruct</span>()</span> is automatically chained, and the Childs's method is called first.</p>
-<code class="prettyprint">child.mixin({
-	doMoreStuff: function() {
-		console.log(this+': Doing more stuff')
-	}
-});
+<h3>6. Check yo' self</h3>
+<p><span class="code">instanceof</span> and <span class="code">instance.constructor</span> work as expected.</p>
+<code class="prettyprint">console.log(instance.instanceOf(Child)); // true
+console.log(instance.instanceOf(Parent)); // true
+console.log(instance.constructor === Child) // true
+console.log(instance+''); // 'Child'</code>
 
-child.doMoreStuff();
+
+<h3>7. Wreck yo' self</h3>
+<p><span class="code"><span class="typ">destruct</span>()</span> is automatically chained, with the child-most <span class="code"><span class="typ">destruct</span>()</span> method called first.</p>
+<code class="prettyprint">instance.destruct();
 /* Output:
-	Child: Doing more stuff
+    Child: Destructing
+    Parent: Destructing
 */</code>
+
 			</section>
 		</section>
 	</div>

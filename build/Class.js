@@ -138,6 +138,7 @@
 	// Creates a new Class that inherits from this class
 	// Give the function a name so it can refer to itself without arguments.callee
 	Class.extend = function extend(properties) {
+		var superConstructor = this;
 		var superPrototype = this.prototype;
 		
 		// Create an object with the prototype of the superclass
@@ -202,18 +203,29 @@
 			this.construct.apply(this, arguments);
 			this.init();
 		}
-		
-		// Store the extended class'prototype as the prototype of the constructor
-		Class.prototype = prototype;
-		
+
 		// Assign prototype.constructor to the constructor itself
 		// This allows instances to refer to this.constructor.prototype
 		// This also allows creation of new instances using instance.constructor()
-		Class.prototype.constructor = Class;
-		
+		prototype.constructor = Class;
+
+		// Store the superPrototype
+		// It will be accessible on an instance as follows:
+		//	instance.superPrototype
+		//	instance.constructor.prototype.superPrototype
+		prototype.superPrototype = superPrototype;
+
+		// Store the extended class' prototype as the prototype of the constructor
+		Class.prototype = prototype;
+
+		// Store the superConstructor
+		// It will be accessible on an instance as follows:
+		//	instance.constructor.superConstructor
+		Class.superConstructor = superConstructor;
+
 		// Add extend() as a static method on the constructor
 		Class.extend = extend;
-		
+
 		return Class;
 	};
 	
