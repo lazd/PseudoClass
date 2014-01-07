@@ -4,6 +4,9 @@
 #### Sweet syntactic sugar for prototypal inheritance.
 PseudoClass provides `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
 
+#### All the same under the hood.
+PseudoClass uses JavaScript constructors and prototypal inheritance under the hood. Monkey-patching, `instanceof`, and `instance.constructor` all work as expected.
+
 #### Not afraid to mix it up.
 Mixins can be added when a class is declared or after instantiation with the `mixin()` method.
 
