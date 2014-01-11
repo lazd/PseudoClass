@@ -50,9 +50,17 @@
 		return this;
 	}
 
+	// Return a function that calls the specified method, passing arguments
+	function makeApplier(method) {
+		return function() {
+			return this[method].apply(this, arguments);
+		};
+	}
+
 	// Merge and define properties
 	function defineAndInheritProperties(Component, properties) {
 		var constructor,
+			descriptor,
 			property,
 			propertyDescriptors,
 			propertyDescriptorHash,
@@ -79,7 +87,17 @@
 		// Combine property descriptors, allowing overriding of individual properties
 		propertyDescriptors = {};
 		for (property in propertyDescriptorHash) {
-			propertyDescriptors[property] = extendThis.apply({}, propertyDescriptorHash[property]);
+			descriptor = propertyDescriptors[property] = extendThis.apply({}, propertyDescriptorHash[property]);
+
+			// Allow setters to be strings
+			// An additional wrapping function is used to allow monkey-patching
+			// apply is used to handle cases where the setter is called directly
+			if (typeof descriptor.set === 'string') {
+				descriptor.set = makeApplier(descriptor.set);
+			}
+			if (typeof descriptor.get === 'string') {
+				descriptor.get = makeApplier(descriptor.get);
+			}
 		}
 
 		// Store option descriptors on the constructor
@@ -203,19 +221,30 @@
 		Class.extend = extend;
 
 		// Create an object with the prototype of the superclass
-		var prototype = Object.create(superPrototype);
-		
-		if (properties) {
-			if (properties.properties) {
-				defineAndInheritProperties(Class, properties.properties);
+		// Store the extended class' prototype as the prototype of the constructor
+		var prototype = Class.prototype = Object.create(superPrototype);
 
-				delete properties.properties;
-			}
+		// Assign prototype.constructor to the constructor itself
+		// This allows instances to refer to this.constructor.prototype
+		// This also allows creation of new instances using instance.constructor()
+		prototype.constructor = Class;
+
+		// Store the superPrototype
+		// It will be accessible on an instance as follows:
+		//	instance.superPrototype
+		//	instance.constructor.prototype.superPrototype
+		prototype.superPrototype = superPrototype;
+
+		if (properties) {
+			// Set property descriptors aside
+			// We'll first inherit methods, then we'll apply these
+			var propertyDescriptors = properties.properties;
+			delete properties.properties;
 
 			// Mix the new properties into the class prototype
 			// This does not copy construct and destruct
 			mixin.call(prototype, properties, superPrototype);
-			
+
 			// Mix in all the mixins
 			// This also does not copy construct and destruct
 			if (Array.isArray(properties.mixins)) {
@@ -224,7 +253,11 @@
 					mixin.call(prototype, properties.mixins[i], prototype);
 				}
 			}
-			
+
+			if (propertyDescriptors) {
+				defineAndInheritProperties(Class, propertyDescriptors);
+			}
+
 			// Chain the construct() method (supermost executes first) if necessary
 			if (properties.construct) {
 				var construct = properties.construct;
@@ -266,20 +299,6 @@
 			prototype.construct = noop;
 		if (typeof prototype.init !== 'function')
 			prototype.init = noop;
-
-		// Assign prototype.constructor to the constructor itself
-		// This allows instances to refer to this.constructor.prototype
-		// This also allows creation of new instances using instance.constructor()
-		prototype.constructor = Class;
-
-		// Store the superPrototype
-		// It will be accessible on an instance as follows:
-		//	instance.superPrototype
-		//	instance.constructor.prototype.superPrototype
-		prototype.superPrototype = superPrototype;
-
-		// Store the extended class' prototype as the prototype of the constructor
-		Class.prototype = prototype;
 
 		return Class;
 	};

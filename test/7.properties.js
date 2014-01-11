@@ -39,6 +39,55 @@ describe('Instance properties:', function() {
 			expect(a._name).to.equal('PseudoClass');
 		});
 
+		it('properties with setters and getters as method strings', function() {
+			var A = Class.extend({
+				properties: {
+					name: {
+						set: 'setName',
+						get: 'getName'
+					}
+				},
+				setName: function(name) {
+					this._name = name;
+				},
+				getName: function() {
+					return this._name;
+				}
+			});
+
+			var a = new A();
+			a.name = 'PseudoClass';
+
+			expect(a.name).to.equal('PseudoClass');
+			expect(a._name).to.equal('PseudoClass');
+		});
+
+		it('properties with setters and getters as method strings with monkey-patching', function() {
+			var A = Class.extend({
+				properties: {
+					name: {
+						set: 'setName',
+						get: 'getName'
+					}
+				}
+			});
+
+			var a = new A();
+
+			// Add methods after instantiation
+			A.prototype.setName = function(name) {
+				this._name = name;
+			};
+			A.prototype.getName = function() {
+				return this._name;
+			};
+
+			a.name = 'PseudoClass';
+
+			expect(a.name).to.equal('PseudoClass');
+			expect(a._name).to.equal('PseudoClass');
+		});
+
 		it('should not put properties on the prototype', function() {
 			var A = Class.extend({
 				properties: {
@@ -118,6 +167,29 @@ describe('Instance properties:', function() {
 			expect(b._name).to.be.undefined;
 		});
 
-		it('should not modify parent properities during extension');
+		it('should not modify parent properities during extension', function() {
+			var A = Class.extend({
+				properties: {
+					name: {
+						writable: false,
+						value: 'Original'
+					}
+				}
+			});
+
+			var B = A.extend({
+				properties: {
+					name: {
+						value: 'New'
+					}
+				}
+			});
+
+			var b = new B();
+			expect(A.properties.name.writable).to.equal(false);
+			expect(A.properties.name.value).to.equal('Original');
+			expect(B.properties.name.writable).to.equal(false);
+			expect(B.properties.name.value).to.equal('New');
+		});
 	});
 });
