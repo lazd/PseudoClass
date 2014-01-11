@@ -2,6 +2,15 @@ var expect = require('chai').expect;
 var Class = require('../source/Class');
 
 describe('Class lifecycle:', function() {
+	describe('instantiation', function() {
+		it('should throw when attempting to instantiate without new', function() {
+			expect(function() {
+				var A = Class();
+				var a = A();
+			}).to.throw(Error);
+		});
+	});
+
 	describe('constructors', function() {
 		it('should be chained', function() {
 			var A = Class({
