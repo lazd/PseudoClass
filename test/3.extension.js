@@ -13,9 +13,6 @@ describe('Class extension:', function() {
 	var return3 = function() {
 		return 3;
 	};
-	var callSuper = function(_super) {
-		return _super.call(this);
-	};
 
 	function test_return1(X) {
 		var x = new X();
@@ -84,6 +81,16 @@ describe('Class extension:', function() {
 			// Child class method should override and return 3
 			expect(b.return1()).to.equal(3);
 		});
+
+		it('should use method added to prototype after instantiation', function() {
+			var A = Class();
+
+			var a = new A();
+
+			A.prototype.return1 = return1;
+
+			expect(a.return1()).to.equal(1);
+		});
 	});
 
 	describe('mixins', function() {
@@ -140,8 +147,8 @@ describe('Class extension:', function() {
 					return 'Original';
 				},
 				mixins: [{
-					return1: function(_super) {
-						return 'Mixed'+_super.call(this);
+					return1: function() {
+						return 'Mixed';
 					}
 				}]
 			});
