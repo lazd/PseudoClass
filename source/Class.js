@@ -33,8 +33,59 @@
 		mixin() is provided to mix properties into an instance
 		properties.mixins as an array results in each of the provided objects being mixed in (last object wins)
 		this._super() is supported in mixins
+		properties, if defined, should be a hash of property descriptors as accepted by Object.defineProperties
 */
 (function(global) {
+	// Extend the current context by the passed objects
+	function extendThis() {
+		var i, ni, objects, object, prop;
+		objects = arguments;
+		for (i = 0, ni = objects.length; i < ni; i++) {
+			object = objects[i];
+			for (prop in object) {
+				this[prop] = object[prop];
+			}
+		}
+
+		return this;
+	}
+
+	// Merge and define properties
+	function defineAndInheritProperties(Component, properties) {
+		var constructor,
+			property,
+			propertyDescriptors,
+			propertyDescriptorHash,
+			propertyDescriptorQueue;
+
+		// Set properties
+		Component.properties = properties;
+
+		// Traverse the chain of constructors and gather all property descriptors
+		// Build a queue of property descriptors for combination
+		propertyDescriptorHash = {};
+		constructor = Component;
+		do {
+			if (constructor.properties) {
+				for (property in constructor.properties) {
+					propertyDescriptorQueue = propertyDescriptorHash[property] || (propertyDescriptorHash[property] = []);
+					propertyDescriptorQueue.unshift(constructor.properties[property]);
+				}
+			}
+			constructor = constructor.superConstructor;
+		}
+		while (constructor);
+
+		// Combine property descriptors, allowing overriding of individual properties
+		propertyDescriptors = {};
+		for (property in propertyDescriptorHash) {
+			propertyDescriptors[property] = extendThis.apply({}, propertyDescriptorHash[property]);
+		}
+
+		// Store option descriptors on the constructor
+		Component.properties = propertyDescriptors;
+	}
+
 	// Used for default initialization methods
 	var noop = function() {};
 
@@ -121,13 +172,46 @@
 	// Creates a new Class that inherits from this class
 	// Give the function a name so it can refer to itself without arguments.callee
 	Class.extend = function extend(properties) {
+		// The constructor handles creating an instance of the class, applying mixins, and calling construct() and init() methods
+		function Class() {
+			// Optimization: Requiring the new keyword and avoiding usage of Object.create() increases performance by 5x
+			if (this instanceof Class === false) {
+				throw new Error('Cannot create instance without new operator');
+			}
+
+			// Set properties
+			var propertyDescriptors = Class.properties;
+			if (propertyDescriptors) {
+				Object.defineProperties(this, propertyDescriptors);
+			}
+
+			// Optimization: Avoiding conditionals in constructor increases performance of instantiation by 2x
+			this.construct.apply(this, arguments);
+
+			this.init();
+		}
+
 		var superConstructor = this;
 		var superPrototype = this.prototype;
-		
+
+		// Store the superConstructor
+		// It will be accessible on an instance as follows:
+		//	instance.constructor.superConstructor
+		Class.superConstructor = superConstructor;
+
+		// Add extend() as a static method on the constructor
+		Class.extend = extend;
+
 		// Create an object with the prototype of the superclass
 		var prototype = Object.create(superPrototype);
 		
 		if (properties) {
+			if (properties.properties) {
+				defineAndInheritProperties(Class, properties.properties);
+
+				delete properties.properties;
+			}
+
 			// Mix the new properties into the class prototype
 			// This does not copy construct and destruct
 			mixin.call(prototype, properties, superPrototype);
@@ -167,8 +251,8 @@
 				else {
 					prototype.destruct = destruct;
 				}
-			} 
-			
+			}
+
 			// Allow definition of toString as a string (turn it into a function)
 			if (typeof properties.toString === 'string') {
 				var className = properties.toString;
@@ -183,18 +267,6 @@
 		if (typeof prototype.init !== 'function')
 			prototype.init = noop;
 
-		// The constructor handles creating an instance of the class, applying mixins, and calling construct() and init() methods
-		function Class() {
-			// Optimization: Requiring the new keyword and avoiding usage of Object.create() increases performance by 5x
-			if (this instanceof Class === false) {
-				throw new Error('Cannot create instance without new operator');
-			}
-			
-			// Optimization: Avoiding conditionals in constructor increases performance of instantiation by 2x
-			this.construct.apply(this, arguments);
-			this.init();
-		}
-
 		// Assign prototype.constructor to the constructor itself
 		// This allows instances to refer to this.constructor.prototype
 		// This also allows creation of new instances using instance.constructor()
@@ -208,14 +280,6 @@
 
 		// Store the extended class' prototype as the prototype of the constructor
 		Class.prototype = prototype;
-
-		// Store the superConstructor
-		// It will be accessible on an instance as follows:
-		//	instance.constructor.superConstructor
-		Class.superConstructor = superConstructor;
-
-		// Add extend() as a static method on the constructor
-		Class.extend = extend;
 
 		return Class;
 	};
