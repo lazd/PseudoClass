@@ -1,4 +1,4 @@
-# PseudoClass  [![Build status][travis-image]][travis] [![Code coverage status][coveralls-image]][coveralls]
+# PseudoClass [![NPM version][npm-image]][npm-url] [![Build status][travis-image]][travis] [![Code coverage status][coveralls-image]][coveralls] 
 > An OOP framework for Node.js and the browser
 
 #### Sweet syntactic sugar for prototypal inheritance.
@@ -179,3 +179,6 @@ PseudoClass is licensed under the permissive BSD license.
 
 [travis]: http://travis-ci.org/lazd/PseudoClass
 [travis-image]: https://secure.travis-ci.org/lazd/PseudoClass.png?branch=master
+
+[npm-url]: https://npmjs.org/package/pseudoclass
+[npm-image]: https://badge.fury.io/js/pseudoclass.png
