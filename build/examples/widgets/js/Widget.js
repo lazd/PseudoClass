@@ -1,9 +1,9 @@
 // A widget class that handles showing, hiding, and removing an element from the DOM
 var Widget = Class({
 	// Identify ourself
-	toString: function(_super) {
+	toString: function() {
 		// Using the superclass, Base's toString() method
-		return _super.call(this)+'->Widget';
+		return this._super()+'->Widget';
 	},
 	
 	// Extend the Base class

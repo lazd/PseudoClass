@@ -12,10 +12,7 @@ var error = new ColorLogger({
 
 // Log some messages
 console.log(ColorLogger.prototype.colorize("<b>Class Example:</b> Logger"));
-console.log(ColorLogger.prototype.colorize("<i>In this example, we'll use inheritance, mixins, _super.apply(), default properties,\nprivate helper functions, and methods on the prototype of a Class without an instance.</i>"));
-
-// Just a line break, no tricks here :)
-console.log();
+console.log(ColorLogger.prototype.colorize("<i>In this example, we'll use inheritance, mixins, this._super.apply(), default properties,\nprivate helper functions, and methods on the prototype of a Class without an instance.</i>\n"));
 
 // Log some messages
 message.warn('Starting...');
