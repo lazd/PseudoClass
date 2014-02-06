@@ -2,7 +2,7 @@
 > An OOP framework for Node.js and the browser
 
 #### Sweet syntactic sugar for prototypal inheritance.
-PseudoClass provides `construct()`, `destruct()`, `instance._super()`, and an `init()` method that runs after construction is complete.
+PseudoClass provides `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
 
 #### All the same under the hood.
 PseudoClass uses JavaScript constructors and prototypal inheritance under the hood. Monkey-patching, `instanceof`, and `instance.constructor` all work as expected.
@@ -44,22 +44,22 @@ PseudoClass empowers you without getting in your way. See the examples below to 
 
 ```javascript
 var Parent = Class({
-	toString: 'Parent',
-	properties: {
-		visible: {
-			value: true,
-			enumerable: true
-		}
-	},
-	construct: function() {
-		console.log('Parent: Constructing');
-	},
-	destruct: function() {
-		console.log('Parent: Destructing');
-	},
-	doStuff: function() {
-		console.log('Parent: Doing stuff');
-	}
+  toString: 'Parent',
+  properties: {
+    visible: {
+      value: true,
+      enumerable: true
+    }
+  },
+  construct: function() {
+    console.log('Parent: Constructing');
+  },
+  destruct: function() {
+    console.log('Parent: Destructing');
+  },
+  doStuff: function() {
+    console.log('Parent: Doing stuff');
+  }
 });
 ```
 
@@ -70,10 +70,10 @@ A mixin is a set methods you can plug into any class. Mixins can use `_super`, j
 
 ```javascript
 var stuffDoer = {
-	doStuff: function() {
-		this._super();
-		console.log('Mixin: Doing stuff');
-	}
+  doStuff: function() {
+    this._super();
+    console.log('Mixin: Doing stuff');
+  }
 };
 ```
 
@@ -84,23 +84,23 @@ Mixins added at declaration time become part of the prototype.
 
 ```javascript
 var Child = Parent.extend({
-	toString: 'Child',
-	mixins: [stuffDoer],
-	properties: {
-		visible: {
-			value: false // Just override the value
-		}
-	},
-	construct: function() {
-		console.log(this+': Constructing');
-	},
-	destruct: function() {
-		console.log(this+': Destructing');
-	},
-	doStuff: function() {
-		this._super();
-		console.log(this+': Doing stuff');
-	}
+  toString: 'Child',
+  mixins: [stuffDoer],
+  properties: {
+    visible: {
+      value: false // Only override the value
+    }
+  },
+  construct: function() {
+    console.log(this+': Constructing');
+  },
+  destruct: function() {
+    console.log(this+': Destructing');
+  },
+  doStuff: function() {
+    this._super();
+    console.log(this+': Doing stuff');
+  }
 });
 ```
 
@@ -110,8 +110,8 @@ var Child = Parent.extend({
 ```
 var child = new Child();
 /* Output:
-	Parent: Constructing
-	Child: Constructing
+  Parent: Constructing
+  Child: Constructing
 */
 ```
 
@@ -121,9 +121,9 @@ var child = new Child();
 ```javascript
 child.doStuff();
 /* Output:
-	Parent: Doing stuff
-	Child: Doing stuff
-	Mixin: Doing stuff
+  Parent: Doing stuff
+  Child: Doing stuff
+  Mixin: Doing stuff
 */
 ```
 
@@ -134,14 +134,14 @@ Mixins added after instantiation become part of the instance.
 
 ```javascript
 child.mixin({
-	doMoreStuff: function() {
-		console.log(this+': Doing more stuff')
-	}
+  doMoreStuff: function() {
+    console.log(this+': Doing more stuff')
+  }
 });
 
 child.doMoreStuff();
 /* Output:
-	Child: Doing more stuff
+  Child: Doing more stuff
 */
 ```
 
@@ -161,8 +161,8 @@ console.log(child+''); // 'Child'
 ```javascript
 child.destruct();
 /* Output:
-	Child: Destructing
-	Parent: Destructing
+  Child: Destructing
+  Parent: Destructing
 */
 ```
 
