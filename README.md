@@ -2,27 +2,38 @@
 > An OOP framework for Node.js and the browser
 
 #### Sweet syntactic sugar for prototypal inheritance.
-PseudoClass provides `construct()`, `destruct()`, `_super()`, and an `init()` method that runs after construction is complete.
+PseudoClass provides `construct()`, `destruct()`, `instance._super()`, and an `init()` method that runs after construction is complete.
 
 #### All the same under the hood.
 PseudoClass uses JavaScript constructors and prototypal inheritance under the hood. Monkey-patching, `instanceof`, and `instance.constructor` all work as expected.
 
 #### Not afraid to mix it up.
-Mixins can be added when a class is declared or after instantiation with the `mixin()` method.
+Mixins can be added when a class is declared using the `mixins` option or after instantiation with the `instance.mixin()` method.
 
 #### Crushes boilerplate with a classy touch.
 Stay classy and boilerplate-free with string-based `toString` declarations and automatic chaining of `construct()` and `destruct()`.
 
+#### Define and override properties effortlessly.
+Make instance properties non-writable, non-enumerable, or employ setters & getters with the `properties` option, then inherit and override individually.
+
 
 ## Dependencies
 
-PseudoClass is completely standalone with no dependencies. All you need to stay classy is [`Class.js`][Class.min.js].
+PseudoClass is completely standalone. All you need to stay classy is [`Class.js`][Class.min.js].
 
 
 ## Compatibility
 
-PseudoClass is compatible with the latest modern browsers and the oldest versions of Node.js and even IE 5 (with the use of [`Class.polyfills.js`][Class.polyfills.min.js]).
+As PseudoClass makes use of ECMAScript 5 features, it is only compatible with modern browsers.
 
+* IE 9+
+* Firefox 4+
+* Chrome 6+
+* Safari 5+
+* Opera 12+
+* Node 0.8+
+
+PseudoClass can be used in a Node, AMD, or browser environment out of the box.
 
 ## Usage
 
@@ -34,6 +45,12 @@ PseudoClass empowers you without getting in your way. See the examples below to 
 ```javascript
 var Parent = Class({
 	toString: 'Parent',
+	properties: {
+		visible: {
+			value: true,
+			enumerable: true
+		}
+	},
 	construct: function() {
 		console.log('Parent: Constructing');
 	},
@@ -69,6 +86,11 @@ Mixins added at declaration time become part of the prototype.
 var Child = Parent.extend({
 	toString: 'Child',
 	mixins: [stuffDoer],
+	properties: {
+		visible: {
+			value: false // Just override the value
+		}
+	},
 	construct: function() {
 		console.log(this+': Constructing');
 	},
@@ -151,7 +173,6 @@ PseudoClass is licensed under the permissive BSD license.
 
 
 [Class.min.js]: http://lazd.github.io/PseudoClass/build/Class.min.js
-[Class.polyfills.min.js]: http://lazd.github.io/PseudoClass/build/Class.polyfills.min.js
 
 [coveralls]: https://coveralls.io/r/lazd/PseudoClass
 [coveralls-image]: https://coveralls.io/repos/lazd/PseudoClass/badge.png?branch=master
