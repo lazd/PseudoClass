@@ -254,9 +254,8 @@
 				}
 			}
 
-			if (propertyDescriptors) {
-				defineAndInheritProperties(Class, propertyDescriptors);
-			}
+			// Define properties from this class and its parent classes
+			defineAndInheritProperties(Class, propertyDescriptors);
 
 			// Chain the construct() method (supermost executes first) if necessary
 			if (properties.construct) {

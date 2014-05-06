@@ -191,5 +191,25 @@ describe('Instance properties:', function() {
 			expect(B.properties.name.writable).to.equal(false);
 			expect(B.properties.name.value).to.equal('New');
 		});
+
+		it('should inherit properties from parent if no properties are defined on the child', function() {
+			var Parent = Class.extend({
+				properties: {
+					value: {
+						set: function(value) { this._value = value; },
+						get: function(value) { return this._value; }
+					}
+				}
+			});
+
+			var Child = Parent.extend({ properties: {} });
+
+			var child = new Child();
+
+			child.value = 1;
+
+			expect(child._value).to.equal(1);
+			expect(child.value).to.equal(1);
+		});
 	});
 });
