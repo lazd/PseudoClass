@@ -107,6 +107,24 @@ describe('Calling super methods:', function() {
 		expect(b.method2()).to.equal(2);
 	});
 
+
+	it('should call superclass method correctly after calling another method that uses _super()', function() {
+		var B = A.extend({
+			method1: function() {
+				this.method2();
+				return this._super();
+			},
+			method2: function() {
+				return this._super();
+			}
+		});
+
+		var b = new B();
+
+		expect(b.method1()).to.equal(1);
+	});
+
+
 	it('should support _super() within a single mixin on a class', function() {
 		var A = Class({
 			toString: 'MixedUp',

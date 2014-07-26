@@ -115,12 +115,21 @@
 	// Bind an overriding method such that it gets the overridden method as its first argument
 	var superifyDynamic = function(name, func, superPrototype) {
 		return function PseudoClass_setStaticSuper() {
+			// Store the old super
+			var previousSuper = this._super;
+
 			// Use the method from the superclass' prototype
 			// This strategy allows monkey patching (modification of superclass prototypes)
 			this._super = superPrototype[name];
 
 			// Call the actual function
-			return func.apply(this, arguments);
+			var ret = func.apply(this, arguments);
+
+			// Restore the previous value of super
+			// This is required so that calls to methods that use _super within methods that use _super work
+			this._super = previousSuper;
+
+			return ret;
 		};
 	};
 
