@@ -43,15 +43,18 @@ module.exports = function(grunt) {
 			}
 		},
 		mochacov: {
-			test: {}, // Run with the spec testrunner
 			coverage: {
 				options: {
 					coveralls: true
 				}
 			},
+			test: {
+				options: {
+					reporter: 'spec',
+					checkLeaks: true
+				}
+			},
 			options: {
-				reporter: 'spec',
-				ignoreLeaks: false,
 				files: 'test/*.js'
 			}
 		},
