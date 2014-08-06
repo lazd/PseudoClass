@@ -46,9 +46,7 @@ module.exports = function(grunt) {
 			test: {}, // Run with the spec testrunner
 			coverage: {
 				options: {
-					coveralls: {
-						serviceName: 'travis-ci'
-					}
+					coveralls: true
 				}
 			},
 			options: {
