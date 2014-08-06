@@ -174,11 +174,11 @@ PseudoClass is licensed under the permissive BSD license.
 
 [Class.min.js]: http://lazd.github.io/PseudoClass/build/Class.min.js
 
-[coveralls]: https://coveralls.io/r/lazd/PseudoClass
-[coveralls-image]: https://coveralls.io/repos/lazd/PseudoClass/badge.png?branch=master
+[coveralls]: https://coveralls.io/r/lazd/PseudoClass?branch=master
+[coveralls-image]: https://img.shields.io/coveralls/lazd/PseudoClass.svg
 
 [travis]: http://travis-ci.org/lazd/PseudoClass
-[travis-image]: https://secure.travis-ci.org/lazd/PseudoClass.png?branch=master
+[travis-image]: https://secure.travis-ci.org/lazd/PseudoClass.svg?branch=master
 
 [npm-url]: https://npmjs.org/package/pseudoclass
-[npm-image]: https://badge.fury.io/js/pseudoclass.png
+[npm-image]: https://badge.fury.io/js/pseudoclass.svg
