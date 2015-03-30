@@ -1,5 +1,5 @@
 /*
-	Class - JavaScript inheritance
+	PseudoClass - JavaScript inheritance
 
 	Construction:
 		Setup and construction should happen in the construct() method.
@@ -184,30 +184,30 @@
 	};
 
 	// The base Class implementation acts as extend alias, with the exception that it can take properties.extend as the Class to extend
-	var Class = function(properties) {
+	var PseudoClass = function(properties) {
 		// If a class-like object is passed as properties.extend, just call extend on it
 		if (properties && properties.extend)
 			return properties.extend.extend(properties);
 
 		// Otherwise, just create a new class with the passed properties
-		return Class.extend(properties);
+		return PseudoClass.extend(properties);
 	};
 	
-	// Add the mixin method to all classes created with Class
-	Class.prototype.mixin = mixin;
+	// Add the mixin method to all classes created with PseudoClass
+	PseudoClass.prototype.mixin = mixin;
 	
-	// Creates a new Class that inherits from this class
+	// Creates a new PseudoClass that inherits from this class
 	// Give the function a name so it can refer to itself without arguments.callee
-	Class.extend = function extend(properties) {
+	PseudoClass.extend = function extend(properties) {
 		// The constructor handles creating an instance of the class, applying mixins, and calling construct() and init() methods
-		function Class() {
+		function PseudoClass() {
 			// Optimization: Requiring the new keyword and avoiding usage of Object.create() increases performance by 5x
-			if (this instanceof Class === false) {
+			if (this instanceof PseudoClass === false) {
 				throw new Error('Cannot create instance without new operator');
 			}
 
 			// Set properties
-			var propertyDescriptors = Class.properties;
+			var propertyDescriptors = PseudoClass.properties;
 			if (propertyDescriptors) {
 				Object.defineProperties(this, propertyDescriptors);
 			}
@@ -224,19 +224,19 @@
 		// Store the superConstructor
 		// It will be accessible on an instance as follows:
 		//	instance.constructor.superConstructor
-		Class.superConstructor = superConstructor;
+		PseudoClass.superConstructor = superConstructor;
 
 		// Add extend() as a static method on the constructor
-		Class.extend = extend;
+		PseudoClass.extend = extend;
 
 		// Create an object with the prototype of the superclass
 		// Store the extended class' prototype as the prototype of the constructor
-		var prototype = Class.prototype = Object.create(superPrototype);
+		var prototype = PseudoClass.prototype = Object.create(superPrototype);
 
 		// Assign prototype.constructor to the constructor itself
 		// This allows instances to refer to this.constructor.prototype
 		// This also allows creation of new instances using instance.constructor()
-		prototype.constructor = Class;
+		prototype.constructor = PseudoClass;
 
 		// Store the superPrototype
 		// It will be accessible on an instance as follows:
@@ -264,7 +264,7 @@
 			}
 
 			// Define properties from this class and its parent classes
-			defineAndInheritProperties(Class, propertyDescriptors);
+			defineAndInheritProperties(PseudoClass, propertyDescriptors);
 
 			// Chain the construct() method (supermost executes first) if necessary
 			if (properties.construct) {
@@ -308,21 +308,26 @@
 		if (typeof prototype.init !== 'function')
 			prototype.init = noop;
 
-		return Class;
+		return PseudoClass;
 	};
 	
 	if (typeof module !== 'undefined' && module.exports) {
 		// Node.js Support
-		module.exports = Class;
+		module.exports = PseudoClass;
 	}
 	else if (typeof global.define === 'function') {
 		(function(define) {
 			// AMD Support
-			define(function() { return Class; });
+			define(function() { return PseudoClass; });
 		}(global.define));
 	}
 	else {
 		// Browser support
-		global.Class = global.PseudoClass = Class;
+		global.PseudoClass = PseudoClass;
+
+		// Don't blow away existing Class variable
+		if (!global.Class) {
+			global.Class = PseudoClass;
+		}
 	}
 }(this));

@@ -166,6 +166,10 @@ child.destruct();
 */
 ```
 
+### No-conflict by default
+
+PseudoClass is always accessible as `PseudoClass`. If you're using another library that defines `Class`, you can still use PseudoClass by referencing `PseudoClass` instead.
+
 
 ## License
 
